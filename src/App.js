@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Switch, Route, NavLink, Redirect } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, NavLink, Redirect } from "react-router-dom";
 import styled from "styled-components";
 import AppProvider from './context/AppProvider';
 import InputProvider from './context/InputProvider';
@@ -9,6 +9,7 @@ import InputProvider from './context/InputProvider';
 import DocumentationView from "./views/DocumentationView";
 import TimersView from "./views/TimersView";
 import DesignView from "./views/DesignView";
+import AddWorkoutView from "./views/AddWorkoutView";
 
 // Vectors
 import Background from "./images/background.png";
@@ -71,13 +72,14 @@ const StyledLink = styled(NavLink)`
 function App() {
   return (
     <Container>  
+       <Router>
       <InputProvider>
       <AppProvider>    
-      <Router>
+     
         <nav>
           <ul>
             <li>
-              <StyledLink to="/timers">Timers</StyledLink>
+              <StyledLink to="/">Timers</StyledLink>
             </li>
             <li>
               <StyledLink to="/design">Design</StyledLink>
@@ -88,23 +90,17 @@ function App() {
           </ul>
         </nav>
 
-        <Switch>
-          <Route exact path="/">
-            <Redirect to="/timers" />
-          </Route>
-          <Route exact path="/docs">
-              <DocumentationView />
-          </Route>
-          <Route exact path="/timers">
-              <TimersView />
-          </Route>
-          <Route exact path="/design">
-            <DesignView />
-          </Route>
-        </Switch>
-      </Router>   
+        <Routes>
+          <Route path="/" exact element={<TimersView />} />
+          <Route path="/add" exact element={<AddWorkoutView />} />
+          <Route path="/design" exact element={<DesignView />} />
+          <Route path="/docs" exact element={<DocumentationView />} />
+         
+        </Routes>
+     
       </AppProvider>   
       </InputProvider>
+      </Router>  
       
     </Container>
   );

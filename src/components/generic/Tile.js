@@ -3,6 +3,13 @@ import styled from "styled-components";
 import {Container, Row, Col} from "react-bootstrap";
 import {BookmarkXFill } from "react-bootstrap-icons";
 
+const timerThemes = {
+  Stopwatch: "#AAD2E9", 
+  Countdown: "#E3C891",
+  XY: "#91D8E3", 
+  Tabata: "#91E3B2"
+}
+
 
 const TileWrapper = styled.div`
   display: flex;
@@ -12,15 +19,18 @@ const TileWrapper = styled.div`
   align-items: center;
   align-content: center;
   background-color: #1A1A1A;
-  border-radius: 35px;
-  width: 215px; 
-  height: 165px;
+  border-radius: 40px 9px 40px 9px;
+  width: 200px; 
+  height: 150px;
   color: white;
+  margin: 1rem;
 `;
 
 const Title = styled.h3`
   margin: -3px;
   padding-top: 3px;
+  font-size: 18px !important;
+  color: ${({color}) => color ? `${timerThemes[`${color}`]} !important` : "grey"}
 
 `;
 
@@ -42,7 +52,7 @@ const Icon = styled(BookmarkXFill)`
   font-size: 40px;
   color: red;
   position: relative;
-  left: 70px;
+  left: 88px;
   top: -10px;
   margin-bottom: -2rem;
 
@@ -58,34 +68,46 @@ const TimerNumber = styled(Col)`
 `;
 
 
-const TimerTile = () => {
-    
+const TimerTile = (props) => {
+    const { type, work, rounds, rest, index } = props; 
   
     return (
       <>
       
           <TileWrapper>
             <Icon size={40} color="red"/>
-            <Title>Tabata</Title>
+            <Title color={type}>{type}</Title>
             <StatsWrapper>
+              {/******************************
+               * Work time for all timers 
+               *******************************/}
               <Col>
                 <div>Work</div>
-                <div>4838</div>
+                <div>{work}</div>
               </Col>
 
-              <Col>
-                <div>Rounds</div>
-                <div>4838</div>
-              </Col>
+              {/********************************
+               * Rounds for XY and Tabata
+               **********************************/}
+              {type === "XY" || type === "Tabata" ? 
+                <Col>
+                  <div>Rounds</div>
+                  <div>{rounds}</div>
+                </Col> : null }
               
-              <Col>
-                <div>Rest</div>
-                <div>4838</div>
-              </Col>
+              {/**********************************
+               * Rest stats for Tabata
+               **********************************/}
+              {type === "Tabata" && 
+                 <Col>
+                  <div>Rest</div>
+                  <div>{rest}</div>
+               </Col> }
+             
             </StatsWrapper>
 
             <TimerNumber>
-              2 / 5
+             {index + 1}
             </TimerNumber>
           </TileWrapper>
       </>

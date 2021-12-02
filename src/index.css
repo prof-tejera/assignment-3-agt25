@@ -3,7 +3,6 @@
 @import url("https://use.typekit.net/weh8uqg.css");
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
 
-
 body {
   margin: 0;
   font-family: "Open Sans", "league-gothic", "league-gothic-condensed" , "Segoe UI", "Roboto", "Oxygen",
@@ -12,6 +11,10 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
  
+}
+
+button {
+  border:  none;
 }
 
 code {

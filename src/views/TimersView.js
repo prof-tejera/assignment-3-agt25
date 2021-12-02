@@ -1,8 +1,10 @@
 import React from "react";
 import styled from "styled-components";
 import { AppContext } from '../context/AppProvider';
+import { InputContext } from "../context/InputProvider";
+import { BrowserRouter as Router, Routes, Route, Link, useParams, useNavigate } from 'react-router-dom';
 
-// Timers 
+// Timers npm 
 import Stopwatch from "../components/timers/Stopwatch";
 import Countdown from "../components/timers/Countdown";
 import XY from "../components/timers/XY";
@@ -11,6 +13,7 @@ import TimerTile from "../components/generic/Tile";
 
 // Vector
 import HeartRate from "../images/grey-heart-rate.svg";
+import AddWorkoutView from "./AddWorkoutView";
 
 const Container = styled.div`
   display: flex;
@@ -36,8 +39,8 @@ const Intro = styled.div`
     align-items: baseline;
     align-content: center;
     li {
-      font-size: 21px;
-      color: #50874A;
+      font-size: 22px;
+      color: #3E693A;
       :hover {
         color: #33492C;
       };
@@ -56,66 +59,119 @@ const TimerTitle = styled.h1`
   margin: 0 auto;
 `;
 
+const StyledLink = styled(Link)`
+
+text-decoration: none;
+font-size: 24px;
+letter-spacing: 1px;
+`;
+
+
+const StartButton = styled.button`
+  background-color: white;
+  border-radius: 30px;
+  padding: 1.10rem 2.25rem;
+  border: 5px solid white;
+  color: white;
+`;
+
+const ActiveTiles = styled.div`
+display: flex;
+flex-direction: row;
+flex-wrap: wrap;
+justify-content: center;
+align-items: normal;
+align-content: normal;
+margin: 3rem;
+border-bottom: 1px dotted white;
+`;
+
+const TileIntro = styled.p`
+  color: black;
+  font-size: 31px;
+  margin-bottom: -2rem;
+
+`;
+
+const TileContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: normal;
+  align-content: normal;
+  margin: 3rem;
+`;
 
 const TimersView = ()  => {
 
-  const {timerType, setTimerType, resetTimer, isReady } = React.useContext(AppContext);
-    
-    const handleShowTimer = (e) => {
-      resetTimer();
-      let selection = e.target.id; 
-      setTimerType(selection);
-    }
   
-    const timers = [
-      { title: "Stopwatch", C: <Stopwatch /> },
-      { title: "Countdown", C: <Countdown /> },
-      { title: "XY", C: <XY /> },
-      { title: "Tabata", C: <Tabata /> },
-    ];
+  const { newVisit, setNewVisit, homePage, setHomePage } = React.useContext(InputContext);
+  const { timers } = React.useContext(AppContext);
+  let navigate = useNavigate();
+   
+  const addWorkout = () => {
+    navigate(`/add`);
+  }; 
 
   return (
       <>
      
-      {/* Only once the fonts have loaded, show the homepage */}
-      {isReady && 
-        <Container>
+      {/* The first home page presented to the users */}
+      {newVisit &&
+  
+      <Container>
           <Intro>
             <TimerTitle>Timers</TimerTitle>
             <img src={HeartRate} width="350px" alt="Heartbeat line vector"/>
-            {/* List each timer */}
             <ul>
-              {timers.map((timer) => (
-                <li 
-                  id={timer.title}
-                  key={timer.title}
-                  onClick={(timer) => handleShowTimer(timer)}>
-                {timer.title}
-               </li>
-              )   
-              )}
+              <li>Stopwatch</li>
+              <li>Countdown</li>
+              <li>XY-Intervals</li>
+              <li>Tabata</li>
             </ul>
+
+            <StartButton onClick={(e) => {
+              setHomePage(false);
+              setNewVisit(false);
+              addWorkout();
+              }}>
+              <StyledLink to='/add'>
+                Add Workout
+              </StyledLink>
+            </StartButton>
           </Intro>
 
-          <TimerTile/>
+        
+         
 
-          <Timer>
-            {/* Show only the selected timer */}
-            {timerType === "Stopwatch" && 
-              <Stopwatch/>
-            }
-            {timerType === "Countdown" && 
-              <Countdown/>
-            }
-            {timerType === "XY" && 
-              <XY/>
-            }
-            {timerType === "Tabata" && 
-              <Tabata/>
-            }
-          </Timer>
-        </Container>
-      }
+    </Container>
+
+
+      
+    }
+     
+     {!newVisit && timers ? 
+  <div>
+        <TileIntro>Active Queue</TileIntro>
+        <ActiveTiles>
+         {timers.map((timer, index) => (
+                <TimerTile type={timer.type} index={index}
+                work={timer.workSeconds} rounds={timer.rounds}
+                rest={timer.restSeconds}></TimerTile>
+  
+              )   
+              )}
+      
+      
+      </ActiveTiles>  </div> : null
+      
+
+      
+    }
+    
+       
+      
      
     </>
   );
