@@ -14,24 +14,12 @@ export const AppContext = React.createContext({});
 const AppProvider = ({ children }) => {
 
   // Import target rounds, run time, rest time from InputContext
-  const { timers } = React.useContext(InputContext);
+  const { runHours, runMins, runSecs, 
+           } = React.useContext(InputContext);
 
   // Document and fonts state
   // const [isReady, setIsReady ] = useState(false);
-
-  // The queue is originally filled with the user's configs 
-  const [queue, setQueue] = React.useState(timers);
-
-
-  const [newConfigs, setNewConfigs] = React.useState(false);
-
-  const archived = [
-
-  ]; 
-
-  const [ history, setHistory] = React.useState(archived);
-
-  const initialTimers = [
+  const timers = [
     {
       type: 'XY',
       rounds: 3, 
@@ -51,40 +39,44 @@ const AppProvider = ({ children }) => {
       type: 'Countdown',
       workSeconds: 180, 
     }
+  ]; 
+
+  const history = [
+    {
+      type: 'Countdown',
+      workSeconds: 10, 
+    }
   ];
 
-  
+  async function addTimer(timer){
+    timers.push(timer);
+    console.log(`added: ${timer}`);
+    return null;
+  };
 
-  
-  async function removeTimer(id){
-  
-    // Assuming we don't remove it from the configs
-    let filteredQueue = queue.filter((_, index) => index !== id);
-    setQueue(filteredQueue);
-
+  async function removeTimer(index){
+    console.log(`removing: ${index}`);
+    timers.splice(index, 1);
+    return null;
   };
 
   async function archiveTimer(){
+      // Get first timer 
+      let toArchive = timers[0];
 
-      if (queue.length !== 0) {
-        // Archive the finished timer 
-        let toArchive = queue[0]; 
-        setHistory([...history, toArchive]);
+      // Push to history 
+      history.push(toArchive);
+
+      // Remove the first timer from timers 
+      timers.shift(); 
+
       
-        // Remove the finished timer 
-        let filteredQueue = queue.filter((_, index) => index !== 0);
-        setQueue(filteredQueue);
-      };
   };
   
 
   return (
     <AppContext.Provider value={{
-            removeTimer, archiveTimer, 
-            queue, setQueue, 
-            newConfigs, setNewConfigs,
-            history, 
-
+            addTimer, removeTimer, timers
         }}>
           {children}
     </AppContext.Provider>

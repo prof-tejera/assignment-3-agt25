@@ -30,7 +30,7 @@ const Title = styled.h1`
 
 const Form = styled.form`
   background-color: white;
-  height: 500px;
+  height: 510px;
   width: 350px;
   border-radius: 10px;
   display: flex;
@@ -105,13 +105,75 @@ background-repeat: no-repeat;
 }
 `;
 
+const FormHelper = styled.button`
+
+  display: inline-flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  align-content: space-between;
+
+`;
+
+
 const Label = styled.div`
-  text-align: left;
+  float: left;
   font-size: 16px;
   font-weight: 600;
   padding: 0.25rem 0;
-  margin-top: 1.7rem;
+  margin-top: 1.2rem;
+  display: inline-block;
+  
+  p {
+    display: inline-block;
+    font-weight: 400;
+    font-size: 14px;
+    margin: 0;
+    padding-left: 0.5rem;
+    color: #B68C2B;
+  }
 `;
+
+
+const FormInstructons = styled.div`
+  display: inline-flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  align-content: space-between;
+
+`;
+
+const FormBtn = styled.button`
+  background-color: #3bb78f;
+  background-image: linear-gradient(315deg, #3bb78f 0%, #0bab64 74%);
+  padding: 1rem;
+  font-size: 19px;
+  border-radius: 12px;
+  width: auto;
+  color: white;
+  margin: 2rem 3rem;
+  :hover {
+    background-color: black;
+    background-image: none;
+    color: white;
+  }
+`;
+
+const CancelBtn = styled.button`
+  height: 60px;
+  font-size: 18px;
+  background-color: transparent;
+  margin: 0.5rem 4rem 2rem 4rem;
+  color: #1f1f1;
+  :hover {
+    color: goldenrod;
+  }
+`;
+
+
 
 
 const AddWorkoutView = ()  => {
@@ -119,17 +181,43 @@ const AddWorkoutView = ()  => {
   
   const { setNewVisit, timer, setTimerType, workSecs, setWorkSecs, rounds, setRounds, restSecs, setRestSecs } = React.useContext(InputContext);
 
-  const { addTimer } = React.useContext(AppContext);
+  const { addTimer } = React.useContext(InputContext);
 
   const navigate = useNavigate();
   
-  const saveTimer = () => {
+  const saveTimer = (e) => {
+    e.preventDefault();
     let timerObj = formatInput();
-    addTimer(timerObj);
-    navigate(`/`);
-    setNewVisit(false);
+    addTimer(timerObj).then((val) => {
+      console.log(timerObj[0]);
+      navigate(`/`);
+      setNewVisit(false);
+    });
+   
     
   }; 
+
+  const checkTimeInput = (e) => {
+    let id = e.target.id;
+    if (id !== "rounds") {
+      // Max of 60 minutes allowed
+      if (e.target.value > 3600) {
+        e.target.value = 3600; 
+      }; 
+
+      if (id === "work") {
+        setWorkSecs(e.target.value);
+      } else {
+        setRestSecs(e.target.value);
+      }; 
+    } else {
+      // Max of 99 rounds allowed 
+      if (e.target.value > 99) {
+        e.target.value = 99; 
+      }; 
+      setRounds(e.target.value);
+    };
+  };
 
   
 
@@ -164,13 +252,14 @@ const AddWorkoutView = ()  => {
       
       <Container>
       <Title>Add Your Workout</Title>
-      <Form>
+      <Form onSubmit={(e) => saveTimer(e)}>
     
 
     {/****************************
      * Select Timer options
      ****************************/}
     <div>
+      
       <Label>Select Timer</Label> 
       <CustomSelect name="timerType" onChange={(e) => setTimerType(e.target.value)}>
           <option default value="Stopwatch">Stopwatch</option>
@@ -184,9 +273,15 @@ const AddWorkoutView = ()  => {
      * Work seconds
      ****************************/}
     <div>
-      <Label>Work Time (s)</Label>
-      <CustomInput type="number" required onKeyUp={(e) => 
-        setWorkSecs(e.target.value)}/>
+      <Label>Work Time (s)
+      <p>Max: 3600 (s)</p>
+      </Label>
+     
+      <CustomInput type="number" id="work" required onKeyUp={(e) => {
+        checkTimeInput(e)
+       }
+      } 
+        />
     </div>
 
 
@@ -195,9 +290,12 @@ const AddWorkoutView = ()  => {
      ****************************/}
     {timer === "XY" || timer === "Tabata" ? 
      <div>
-      <Label>Rounds</Label>
-      <CustomInput type="number" required onKeyUp={(e) => 
-        setRounds(e.target.value)}/>
+      <Label>Rounds
+      <p>Max: 99</p>
+      </Label>
+      <CustomInput type="number" id="rounds" required onKeyUp={(e) => {
+        checkTimeInput(e)
+       }}/>
      </div> : null }
 
      {/****************************
@@ -205,15 +303,25 @@ const AddWorkoutView = ()  => {
      ****************************/}
      {timer === "Tabata" ? 
      <div>
-      <Label>Rest Time (s)</Label>
-      <CustomInput type="number" required onKeyUp={(e) => 
-        setRestSecs(e.target.value)}/>
+      <Label>Rest Time (s)
+      <p>Max: 3600 (s)</p>
+      </Label>
+      <CustomInput type="number" id="rest" required onKeyUp={(e) => {
+        checkTimeInput(e)
+       }}/>
      </div> : null }
     
     
-    <Link to="/" onClick={(e) => saveTimer()}>Add To Queue</Link>
-    
+   
 
+    
+  
+
+     
+
+    <FormBtn type="submit"> Add To Queue</FormBtn>
+
+      <CancelBtn onClick={() => navigate("/")}>Cancel</CancelBtn>
      
       </Form>
       </Container>

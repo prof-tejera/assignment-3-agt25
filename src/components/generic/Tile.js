@@ -2,6 +2,8 @@ import React from "react";
 import styled from "styled-components";
 import {Container, Row, Col} from "react-bootstrap";
 import {BookmarkXFill } from "react-bootstrap-icons";
+import { formatTime, formatMins, formatSecs } from "../../utils/helpers";
+import { AppContext } from "../../context/AppProvider";
 
 const timerThemes = {
   Stopwatch: "#AAD2E9", 
@@ -18,7 +20,7 @@ const TileWrapper = styled.div`
   justify-content: center;
   align-items: center;
   align-content: center;
-  background-color: #1A1A1A;
+  background-color: ${(props) => props === 0 ? "white !important" : "#1A1A1A !important" };
   border-radius: 40px 9px 40px 9px;
   width: 200px; 
   height: 150px;
@@ -62,28 +64,34 @@ const TimerNumber = styled(Col)`
   padding-bottom: 1rem;
   margin: auto;
   font-size: 20px;
+  background-color: ${({index}) => index === 0 ? "blue" : "transparent"}
+`;
 
+const TypeTitle = styled.div`
 
+  color: #f5f5f5; 
 
 `;
 
 
 const TimerTile = (props) => {
     const { type, work, rounds, rest, index } = props; 
+
+    const { removeTimer } = React.useContext(AppContext);
   
     return (
       <>
       
           <TileWrapper>
-            <Icon size={40} color="red"/>
+            <Icon size={40} color="red" onClick={(e) => removeTimer(index)}/>
             <Title color={type}>{type}</Title>
             <StatsWrapper>
               {/******************************
                * Work time for all timers 
                *******************************/}
               <Col>
-                <div>Work</div>
-                <div>{work}</div>
+                <TypeTitle>Work</TypeTitle>
+                <div>{formatMins(work)}:{formatSecs(work)}</div>
               </Col>
 
               {/********************************
@@ -91,7 +99,7 @@ const TimerTile = (props) => {
                **********************************/}
               {type === "XY" || type === "Tabata" ? 
                 <Col>
-                  <div>Rounds</div>
+                  <TypeTitle>Rounds</TypeTitle>
                   <div>{rounds}</div>
                 </Col> : null }
               
@@ -100,13 +108,14 @@ const TimerTile = (props) => {
                **********************************/}
               {type === "Tabata" && 
                  <Col>
-                  <div>Rest</div>
-                  <div>{rest}</div>
+                  <TypeTitle>Rest</TypeTitle>
+                  <div>{formatMins(rest)}:
+                  {formatSecs(rest)}</div>
                </Col> }
              
             </StatsWrapper>
 
-            <TimerNumber>
+            <TimerNumber index={index}>
              {index + 1}
             </TimerNumber>
           </TileWrapper>

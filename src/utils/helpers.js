@@ -7,59 +7,29 @@ export function timeInSeconds(hours, minutes, seconds) {
 };
 
 
-export function alertCountUp(targetTime, currTime) {
-    /***********************************
-     * Handles stopwatch alerts
-     **********************************/
-
-    // Beginning messages 
-    if (currTime <= 1) {
-        return "Start Running";
-    } else if (targetTime - 2 === currTime && targetTime > 8) {
-        return "Almost There";
-    } else {
-        return "Run";
-    }
+// Converts seconds to minutes 
+export function formatTime(seconds) {
+    let minutes = Math.floor(seconds / 60); 
+    let secs = seconds % 60; 
+    
+    return `${minutes}:${secs}`;
 }; 
 
 
-export function alertCountDown(targetTime, currTime, action, type, round) {
-    
-    /**********************************************
-     * Handles countdown, xy, and tabata alerts
-     *********************************************/
-    let curr; 
+export function formatMins(seconds) {
+    let minutes = Math.floor(seconds / 60);
+    minutes = minutes.toString(); 
+    if (minutes.length === 1) {
+        minutes = `0${minutes}`
+    };
+    return minutes; 
+};
 
-    // XY alert says "keep running" every round
-    if (type === "XY" && round > 1) {
-        curr = "Keep Running";
-    } else {
-        if (action === "Run") {
-            curr = "Start Running";
-        } else if (action === "Rest") {
-            curr = "Start Resting";
-        };
-    }; 
-
-    // Alert for second 1
-    if (targetTime - 1 === currTime) {
-        return `${curr}`; 
-    }; 
-    
-    // Beginning messages
-    if (targetTime > 3) {
-        if (targetTime - 1 === currTime) {
-            return `${curr}`;
-        } else {
-            return `${action}`;
-        };
-    } else {
-        return `${action}`;
-    }; 
-}; 
-
-
-export function formatTime(time) {
-    let formatted = time.toString().length === 1 ? `0${time}` : time; 
-    return formatted; 
-}
+export function formatSecs(seconds) {
+    let secs = seconds % 60;
+    secs = secs.toString();
+    if (secs.length === 1) {
+        secs = `0${secs}`
+    };
+    return secs; 
+};

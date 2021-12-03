@@ -1,8 +1,10 @@
 import React from "react";
 import styled from "styled-components";
+import { formatTime } from "../utils/helpers";
 import { AppContext } from '../context/AppProvider';
 import { InputContext } from "../context/InputProvider";
 import { BrowserRouter as Router, Routes, Route, Link, useParams, useNavigate } from 'react-router-dom';
+
 
 // Timers npm 
 import Stopwatch from "../components/timers/Stopwatch";
@@ -107,7 +109,8 @@ const TimersView = ()  => {
 
   
   const { newVisit, setNewVisit, homePage, setHomePage } = React.useContext(InputContext);
-  const { timers } = React.useContext(AppContext);
+  const { timers } = React.useContext(InputContext);
+  const { queue, archiveTimer, removeTimer, history } = React.useContext(AppContext);
   let navigate = useNavigate();
    
   const addWorkout = () => {
@@ -142,6 +145,8 @@ const TimersView = ()  => {
             </StartButton>
           </Intro>
 
+         
+
         
          
 
@@ -151,23 +156,44 @@ const TimersView = ()  => {
       
     }
      
-     {!newVisit && timers ? 
+     {queue.length > 0 && 
   <div>
+        
         <TileIntro>Active Queue</TileIntro>
         <ActiveTiles>
-         {timers.map((timer, index) => (
-                <TimerTile type={timer.type} index={index}
+         {queue.map((timer, index) => (
+                <TimerTile key={index} type={timer.type} index={index}
+                work={timer.workSeconds} rounds={timer.rounds}
+                rest={timer.restSeconds}></TimerTile>
+              )   
+          )}
+      
+      </ActiveTiles>
+      
+     
+      <button onClick={(e) => archiveTimer()}>Archive</button>  </div>
+     
+
+      
+    }
+
+    {history.length > 0 && 
+    
+      <div> 
+
+      <TileIntro>Finished</TileIntro>
+      <ActiveTiles>
+         {history.map((timer, index) => (
+                <TimerTile key={index} type={timer.type} index={index}
                 work={timer.workSeconds} rounds={timer.rounds}
                 rest={timer.restSeconds}></TimerTile>
   
               )   
-              )}
+          )}
       
       
-      </ActiveTiles>  </div> : null
-      
-
-      
+      </ActiveTiles>
+      </div>
     }
     
        
