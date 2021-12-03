@@ -73,6 +73,7 @@ function App() {
   return (
     <Container>  
        <Router>
+        <AppProvider>
       <InputProvider>
       <AppProvider>    
      
@@ -100,6 +101,7 @@ function App() {
      
       </AppProvider>   
       </InputProvider>
+      </AppProvider>
       </Router>  
       
     </Container>

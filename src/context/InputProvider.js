@@ -5,7 +5,7 @@ export const InputContext = React.createContext({});
 
 const InputProvider = ({ children }) => {
 
-  const { setNewConfigs } = React.useContext(AppContext);
+  const { setNewConfigs, queue, setQueue } = React.useContext(AppContext);
 
  
   const [homePage, setHomePage ] = useState(true);
@@ -42,6 +42,7 @@ const InputProvider = ({ children }) => {
     timers.push(timer);
     console.log(`hey: ${timers}`);
     setNewConfigs(true);
+   
 
     return null;
   }; 

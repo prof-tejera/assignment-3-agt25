@@ -84,14 +84,15 @@ flex-wrap: wrap;
 justify-content: center;
 align-items: normal;
 align-content: normal;
-margin: 3rem;
+width: 75%;
+margin: auto;
 border-bottom: 1px dotted white;
 `;
 
 const TileIntro = styled.p`
   color: black;
   font-size: 31px;
-  margin-bottom: -2rem;
+  
 
 `;
 
@@ -183,6 +184,7 @@ const TimersView = ()  => {
 
       <TileIntro>Finished</TileIntro>
       <ActiveTiles>
+    
          {history.map((timer, index) => (
                 <TimerTile key={index} type={timer.type} index={index}
                 work={timer.workSeconds} rounds={timer.rounds}

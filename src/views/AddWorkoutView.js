@@ -150,11 +150,11 @@ const FormBtn = styled.button`
   background-color: #3bb78f;
   background-image: linear-gradient(315deg, #3bb78f 0%, #0bab64 74%);
   padding: 1rem;
-  font-size: 19px;
+  font-size: 18px;
   border-radius: 12px;
+  border: 2px solid #3bb78f;
   width: auto;
   color: white;
-  margin: 2rem 3rem;
   :hover {
     background-color: black;
     background-image: none;
@@ -162,11 +162,30 @@ const FormBtn = styled.button`
   }
 `;
 
+
+const AddBtn = styled.button`
+  background-color: transparent;
+  border: 2px solid green;
+  color: green;
+  border-radius: 12px;
+  font-size: 18px;
+  padding: 1rem;
+  height: 60px;
+  :hover {
+    background-color: black;
+    color: white;
+
+  }
+  
+  
+`;
+
+
 const CancelBtn = styled.button`
   height: 60px;
   font-size: 18px;
   background-color: transparent;
-  margin: 0.5rem 4rem 2rem 4rem;
+  
   color: #1f1f1;
   :hover {
     color: goldenrod;
@@ -174,6 +193,18 @@ const CancelBtn = styled.button`
 `;
 
 
+const BtnsWrapper = styled.div`
+display: flex;
+flex-direction: row;
+flex-wrap: nowrap;
+justify-content: space-between;
+align-items: normal;
+align-content: normal;
+  margin: 1.25rem 0;
+  padding: 1rem 0 2rem 0;
+  border-bottom: 1px solid grey;
+
+`;
 
 
 const AddWorkoutView = ()  => {
@@ -181,17 +212,32 @@ const AddWorkoutView = ()  => {
   
   const { setNewVisit, timer, setTimerType, workSecs, setWorkSecs, rounds, setRounds, restSecs, setRestSecs } = React.useContext(InputContext);
 
-  const { addTimer } = React.useContext(InputContext);
+  const { addTimer, timers } = React.useContext(InputContext);
+  const { queue, setQueue } = React.useContext(AppContext);
+
+  let btnClicked = null;
 
   const navigate = useNavigate();
   
   const saveTimer = (e) => {
+    
     e.preventDefault();
     let timerObj = formatInput();
     addTimer(timerObj).then((val) => {
       console.log(timerObj[0]);
-      navigate(`/`);
+      let oldQueue = queue;
+      oldQueue.push(timerObj)
+      setQueue(oldQueue);
+      console.log(timers);
       setNewVisit(false);
+      if (btnClicked === "Start") {
+        navigate(`/`);
+      } else if (btnClicked === "Add") {
+        setTimerType("Stopwatch");
+        setWorkSecs(0);
+        setRestSecs(0);
+        setRounds(0);
+      }
     });
    
     
@@ -277,7 +323,7 @@ const AddWorkoutView = ()  => {
       <p>Max: 3600 (s)</p>
       </Label>
      
-      <CustomInput type="number" id="work" required onKeyUp={(e) => {
+      <CustomInput type="number" id="work" value={workSecs} required onChange={(e) => {
         checkTimeInput(e)
        }
       } 
@@ -318,8 +364,14 @@ const AddWorkoutView = ()  => {
   
 
      
+     <BtnsWrapper>
 
-    <FormBtn type="submit"> Add To Queue</FormBtn>
+     <AddBtn type="submit" onClick={(e) => btnClicked = "Add"}> Add to Queue</AddBtn>
+    <FormBtn type="submit" onClick={(e) => btnClicked = "Start"}> Add and Start</FormBtn>
+      </BtnsWrapper>
+
+    
+
 
       <CancelBtn onClick={() => navigate("/")}>Cancel</CancelBtn>
      
