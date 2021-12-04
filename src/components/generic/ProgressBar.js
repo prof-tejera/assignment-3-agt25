@@ -14,12 +14,12 @@ const ProgressContainer = styled.div`
 
 const ProgressBar = () => {
 
-  const { progressTime, currProgress } = React.useContext(AppContext);
+  const { queue, currAction } = React.useContext(AppContext);
   
   return (
     <>
       <ProgressContainer>
-        <progress value={currProgress} max={progressTime}></progress>
+        <progress value={14} max={currAction === "Work" ? queue[0].workSeconds : queue[0].restSeconds}></progress>
       </ProgressContainer>  
     </>
   );

@@ -6,7 +6,6 @@ import { AppContext } from "../../context/AppProvider";
 import Device from "./Device";
 import Button from "./Button";
 import TimerScreen from "./TimerScreen";
-import TimerInputs from "./TimerInputs";
 import ActionButton from "./ActionButton";
 
 
@@ -42,49 +41,47 @@ const ResetBtn = styled(Button)`
 
 const Timer = () => {
   
-  const { timerType, resetTimer, endTimer, actionBtn,
-          isInputPhase, isTimerShowing,isTimerPaused, 
-          isEndEnabled, isTimerEnd, handleActionButton } = React.useContext(AppContext);
+  const { queue } = React.useContext(AppContext);
+
+  
   
     return (
       <div>
       {/* Device component */}
-      <Device type="phone" currentTimer={timerType}>
+      <Device type="phone" currentTimer={queue[0].type}>
           {/* Timer screen */}
-            {isTimerShowing  && 
-              <TimerScreen/> }
+           
+              <TimerScreen/> 
                 
               {/* Timer screen buttons */}
-              {isTimerShowing && 
+              
               <div>
                 <ButtonsContainer>
 
                     {/* End button */}
                     <Button outline="2px solid #302F2F" 
                                     outlineOffset="2px"
-                                    disabled={!isEndEnabled}
-                                    onClick={endTimer}>
-                                    End
+                                    disabled={false}
+                                    onClick={(e) => console.log(e)}>
+                                    Skip
                     </Button>
 
                   {/* Reset button */}
-                  <ResetBtn onClick={resetTimer}>
-                    {isTimerPaused || isTimerEnd ? "Reset" : ""}
+                  <ResetBtn onClick={(e) => console.log('Reset')}>
+                    Reset
                   </ResetBtn>
                   
                   {/* Pause, New, or Start button */}
                     <ActionButton 
-                                  type={actionBtn === "Pause" ? "Orange" : "Green"}
-                                  onClick={handleActionButton}> 
-                                  {actionBtn}
+                                  type={"Orange"}
+                                  onClick={(e) => console.log(e)}> 
+                                  Pause
                     </ActionButton>
                 </ButtonsContainer>
               </div>
-            }
+            
 
-            {/* Timer inputs replace the screen during the input phase */}
-            {isInputPhase && 
-            <TimerInputs/>}
+           
 
         </Device>    
       </div>

@@ -12,10 +12,10 @@ import Countdown from "../components/timers/Countdown";
 import XY from "../components/timers/XY";
 import Tabata from "../components/timers/Tabata";
 import TimerTile from "../components/generic/Tile";
+import Timer from "../components/generic/Timer";
 
 // Vector
 import HeartRate from "../images/grey-heart-rate.svg";
-import AddWorkoutView from "./AddWorkoutView";
 
 const Container = styled.div`
   display: flex;
@@ -50,15 +50,19 @@ const Intro = styled.div`
   };
 `;
 
-const Timer = styled.div`
-  padding: 0.5rem 3rem 0.5rem 3rem;
-`;
+
 
 const TimerTitle = styled.h1`
   font-size: 77px;
   font-family: Open Sans;
   color: #3679C0;
   margin: 0 auto;
+`;
+
+const SmallerTitle = styled(TimerTitle)`
+  font-size: 32px;
+
+
 `;
 
 const StyledLink = styled(Link)`
@@ -145,21 +149,25 @@ const TimersView = ()  => {
               </StyledLink>
             </StartButton>
           </Intro>
-
-         
-
-        
-         
-
     </Container>
-
-
-      
     }
      
-     {queue.length > 0 && 
-  <div>
-        
+
+
+    {!newVisit &&
+      <div>
+          {/* <SmallerTitle></SmallerTitle>
+          <img src={HeartRate} width="300px" alt="Heartbeat line vector"/> */}
+        <Timer/>
+      </div>
+    
+    
+    }
+
+
+     {/* If there's timers already configured, show the active queue */}
+     {queue.length > 0 && !newVisit &&
+        <div>
         <TileIntro>Active Queue</TileIntro>
         <ActiveTiles>
          {queue.map((timer, index) => (
@@ -168,23 +176,16 @@ const TimersView = ()  => {
                 rest={timer.restSeconds}></TimerTile>
               )   
           )}
-      
       </ActiveTiles>
-      
-     
       <button onClick={(e) => archiveTimer()}>Archive</button>  </div>
-     
-
-      
     }
 
-    {history.length > 0 && 
-    
-      <div> 
 
+    {/* If there's timers that are already finished, show the history queue */}
+    {history.length > 0 && !newVisit &&
+      <div> 
       <TileIntro>Finished</TileIntro>
       <ActiveTiles>
-    
          {history.map((timer, index) => (
                 <TimerTile key={index} type={timer.type} index={index}
                 work={timer.workSeconds} rounds={timer.rounds}
@@ -192,15 +193,10 @@ const TimersView = ()  => {
   
               )   
           )}
-      
-      
       </ActiveTiles>
       </div>
     }
     
-       
-      
-     
     </>
   );
 }

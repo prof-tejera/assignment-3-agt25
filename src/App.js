@@ -32,6 +32,7 @@ const Container = styled.div`
     display: inline-block;
     padding: 0.1rem 1rem;
     color: #414141; 
+    margin-bottom: 1rem;
   };
   a {
     color: #414141;

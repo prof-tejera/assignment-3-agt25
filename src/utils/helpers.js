@@ -9,10 +9,19 @@ export function timeInSeconds(hours, minutes, seconds) {
 
 // Converts seconds to minutes 
 export function formatTime(seconds) {
-    let minutes = Math.floor(seconds / 60); 
-    let secs = seconds % 60; 
+    let minutes = Math.floor(seconds / 60);
+    minutes = minutes.toString(); 
+    if (minutes.length === 1) {
+        minutes = `0${minutes}`
+    };
     
-    return `${minutes}:${secs}`;
+    let secs = seconds % 60;
+    secs = secs.toString();
+    if (secs.length === 1) {
+        secs = `0${secs}`
+    };
+
+    return `${minutes}:${secs}`
 }; 
 
 

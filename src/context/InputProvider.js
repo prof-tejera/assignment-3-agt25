@@ -11,9 +11,9 @@ const InputProvider = ({ children }) => {
   const [homePage, setHomePage ] = useState(true);
   const [newVisit, setNewVisit ] = useState(true);
   const [timer, setTimerType ] = useState("Stopwatch");
-  const [workSecs, setWorkSecs ] = useState(0);
-  const [restSecs, setRestSecs ] = useState(0);
-  const [rounds, setRounds ] = useState(0);
+  const [workSecs, setWorkSecs ] = useState(null);
+  const [restSecs, setRestSecs ] = useState(null);
+  const [rounds, setRounds ] = useState(null);
 
   
   const timers = [

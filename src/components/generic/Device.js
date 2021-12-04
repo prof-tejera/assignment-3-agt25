@@ -107,11 +107,14 @@ const RestTime = styled.div`
 
 const Device = ({...props}) => {
 
-    const { runHours, runMins, runSecs, 
-            restHours, restMins, restSecs, 
-            targetRounds } = React.useContext(InputContext);
+   
 
-    const { timerType, currAction, currRound, isTimerStarted } = React.useContext(AppContext);
+    const { queue, currAction, currRound, running } = React.useContext(AppContext);
+
+    const workTime = queue[0].workSeconds;
+    const timerType = queue[0].type;
+    const targetRounds = queue[0].rounds;
+    const restTime = queue[0].restSeconds;
     
     return (
         <>
@@ -125,16 +128,16 @@ const Device = ({...props}) => {
                 </StatusBar>
                 {props.children}
                 <NavWrapper>
-                    <RunTime action={currAction} started={isTimerStarted}>
-                        {formatTime(runHours)}: {formatTime(runMins)}: {formatTime(runSecs)}
+                    <RunTime action={currAction} started={running}>
+                        {formatTime(workTime)}
                         <div>
-                            Run Time
+                            Work Time
                         </div>
                     </RunTime>
 
                     {timerType === "XY" && 
                     <div>
-                        {isTimerStarted ? currRound : "0"} / {targetRounds}
+                        {running ? currRound : "0"} / {targetRounds}
                         <div>
                             Rounds
                         </div>
@@ -143,7 +146,7 @@ const Device = ({...props}) => {
 
                     {timerType === "Tabata" && 
                     <div>
-                        {isTimerStarted ? currRound : "0"} / {targetRounds}
+                        {running ? currRound : "0"} / {targetRounds}
                         <div>
                             Rounds
                         </div>
@@ -151,8 +154,8 @@ const Device = ({...props}) => {
                     }
 
                     {timerType === "Tabata" && 
-                     <RestTime action={currAction} started={isTimerStarted}>
-                        {formatTime(restHours)}: {formatTime(restMins)}: {formatTime(restSecs)}
+                     <RestTime action={currAction} started={running}>
+                       {formatTime(restTime)}
                         <div>
                             Rest Time
                         </div>

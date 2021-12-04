@@ -1,17 +1,9 @@
-import React from "react";
+import React, {useState} from "react";
 import styled from "styled-components";
 import { AppContext } from '../context/AppProvider';
 import { InputContext } from "../context/InputProvider";
 import { BrowserRouter as Router, Routes, Route, Link, useParams, useNavigate } from 'react-router-dom';
-import {Row, Col, FormControl} from 'react-bootstrap';
-
-
-
-// Timers 
 import TimerTile from "../components/generic/Tile";
-
-// Vector
-import HeartRate from "../images/grey-heart-rate.svg";
 
 const Container = styled.div`
   color: black;
@@ -19,9 +11,6 @@ const Container = styled.div`
   flex-direction: column;
   flex-wrap: wrap;
   align-items: center;
-  
-   
-
 `;
 
 const Title = styled.h1`
@@ -42,18 +31,14 @@ const Form = styled.form`
   padding: 2rem;
 `;
 
-const StyledRow = styled(Row)`
-
-
-
-`;
-
 const CustomInput = styled.input`
-  width: 100%;
+  width: 95%;
+  padding-left: 15px;
   height: 30px;
   border-radius: 5px;
   border: 1px solid #D3D3D3;
   margin: auto;
+  font-size: 16px;
 
 `;
 
@@ -135,6 +120,18 @@ const Label = styled.div`
   }
 `;
 
+const ActiveTiles = styled.div`
+display: flex;
+flex-direction: row;
+flex-wrap: wrap;
+justify-content: center;
+align-items: normal;
+align-content: normal;
+width: 75%;
+margin: auto;
+border-bottom: 1px dotted white;
+`;
+
 
 const FormInstructons = styled.div`
   display: inline-flex;
@@ -146,7 +143,7 @@ const FormInstructons = styled.div`
 
 `;
 
-const FormBtn = styled.button`
+const AddStartBtn = styled.button`
   background-color: #3bb78f;
   background-image: linear-gradient(315deg, #3bb78f 0%, #0bab64 74%);
   padding: 1rem;
@@ -216,52 +213,57 @@ const AddWorkoutView = ()  => {
   const { queue, setQueue } = React.useContext(AppContext);
 
   let btnClicked = null;
+  const [helperMsg, setHelperMsg] = useState(false);
 
   const navigate = useNavigate();
   
   const saveTimer = (e) => {
-    
     e.preventDefault();
     let timerObj = formatInput();
     addTimer(timerObj).then((val) => {
-      console.log(timerObj[0]);
       let oldQueue = queue;
       oldQueue.push(timerObj)
       setQueue(oldQueue);
-      console.log(timers);
       setNewVisit(false);
+
+      
       if (btnClicked === "Start") {
+        // Take the user home 
         navigate(`/`);
       } else if (btnClicked === "Add") {
+        // Allow the user to keep adding other timers
         setTimerType("Stopwatch");
-        setWorkSecs(0);
-        setRestSecs(0);
-        setRounds(0);
+        setWorkSecs("");
+        setRestSecs("");
+        setRounds("");
+        setHelperMsg("");
       }
     });
-   
-    
   }; 
 
   const checkTimeInput = (e) => {
     let id = e.target.id;
+    let val = e.target.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');
+    if (val.length === 1 && val === 0) {
+      val = null;
+    }; 
     if (id !== "rounds") {
       // Max of 60 minutes allowed
-      if (e.target.value > 3600) {
-        e.target.value = 3600; 
+      if (val > 3600) {
+        val = 3600; 
       }; 
 
       if (id === "work") {
-        setWorkSecs(e.target.value);
+        setWorkSecs(val);
       } else {
-        setRestSecs(e.target.value);
+        setRestSecs(val);
       }; 
     } else {
       // Max of 99 rounds allowed 
-      if (e.target.value > 99) {
-        e.target.value = 99; 
+      if (val > 99) {
+        val = 99; 
       }; 
-      setRounds(e.target.value);
+      setRounds(val);
     };
   };
 
@@ -299,6 +301,8 @@ const AddWorkoutView = ()  => {
       <Container>
       <Title>Add Your Workout</Title>
       <Form onSubmit={(e) => saveTimer(e)}>
+
+        <p>Scheduled Timers: {queue.length}</p>
     
 
     {/****************************
@@ -323,8 +327,8 @@ const AddWorkoutView = ()  => {
       <p>Max: 3600 (s)</p>
       </Label>
      
-      <CustomInput type="number" id="work" value={workSecs} required onChange={(e) => {
-        checkTimeInput(e)
+      <CustomInput type="number" id="work" value={workSecs} min="1" required onChange={(e) => {
+        checkTimeInput(e) 
        }
       } 
         />
@@ -357,26 +361,32 @@ const AddWorkoutView = ()  => {
        }}/>
      </div> : null }
     
-    
-   
+    <BtnsWrapper>
+      <AddBtn type="submit" onClick={(e) => btnClicked = "Add"}> Add to Queue</AddBtn>
+      <AddStartBtn type="submit" onClick={(e) => btnClicked = "Start"}> Add and Start</AddStartBtn>
+    </BtnsWrapper>
 
-    
-  
-
-     
-     <BtnsWrapper>
-
-     <AddBtn type="submit" onClick={(e) => btnClicked = "Add"}> Add to Queue</AddBtn>
-    <FormBtn type="submit" onClick={(e) => btnClicked = "Start"}> Add and Start</FormBtn>
-      </BtnsWrapper>
-
-    
-
-
-      <CancelBtn onClick={() => navigate("/")}>Cancel</CancelBtn>
+      <CancelBtn onClick={() => navigate("/")}>Go Back</CancelBtn>
      
       </Form>
       </Container>
+
+      {queue.length > 0 && 
+        <div>
+        <h4>Your Queue</h4>
+        <ActiveTiles>
+         {queue.map((timer, index) => (
+                <TimerTile key={index} type={timer.type} index={index}
+                work={timer.workSeconds} rounds={timer.rounds}
+                rest={timer.restSeconds}></TimerTile>
+              )   
+          )}
+      
+      </ActiveTiles>
+      
+     
+      </div>
+}
      
      
     </>

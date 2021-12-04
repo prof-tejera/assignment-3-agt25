@@ -116,7 +116,7 @@ const HelperText = styled.p`
     position: relative;
     text-align: center;
     top: -210px;
-    font-size: ${({action}) => action.includes("Rest") || action.includes("Run") ? "23px" : "21px"};
+    font-size: ${({action}) => action.includes("Rest") || action.includes("Work") ? "23px" : "21px"};
     animation: myAnim 3s ease 0s 1 normal forwards;  
     @keyframes myAnim {
         0%,
@@ -141,15 +141,17 @@ const CircleWrapper = styled.div`
 
 const TimersScreen = () => {
 
-  const { timerType, 
-            actionHelper, 
-            currAction, currHours, currMins, currSecs, currRound, 
-            isTimerStarted, isTimerPaused, isEndNear } = React.useContext(AppContext);
+  const {   queue,
+            actionHelper, running, paused,
+            currRound, 
+            currAction, } = React.useContext(AppContext);
+
+ const timerType = queue[0].type;
 
         return (
             <>
                 <Container>
-                    <h3>{timerType}</h3>
+                    <h3>{queue[0].type}</h3>
 
                     {/* Top buttons above the timer */}
                     <TopActionsContainer>
@@ -161,26 +163,23 @@ const TimersScreen = () => {
                                
                               
                                 <ActionsCircle fontSize="50px">
-                                <div>{isTimerStarted ? currRound : "0"}</div>
+                                <div>{running ? currRound : "0"}</div>
                                 </ActionsCircle> 
                              </CircleWrapper> : <CircleWrapper/> }
 
                         {/* Right side: Icon status used by all timers */}
                         <CircleWrapper background={Theme.dark1}>
                             <ActionsCircle border="1px dotted #1C91F2"> 
-                            {currAction === "Run" &&  isTimerStarted && !isTimerPaused 
+                            {currAction === "Work" &&  running && !paused 
                                 && <img src={RunningIcon} alt="Running Stick Figure"/>}
 
-                            {currAction === "Run" && !isTimerStarted  && !isTimerPaused 
-                                && <img src={StretchingIcon} alt="Stretching Stick Figure"/>}
-
-                            {currAction === "Rest" && !isTimerPaused 
+                            {currAction === "Rest" && running && !paused 
                                 && <img src={RestingIcon} alt="Standing Stick Figure"/>}
 
-                            {currAction === "Congrats" && !isTimerPaused 
+                            {currAction === "Congrats" && !paused 
                                 && <img src={CongratsIcon} alt="Standing Stick Figure"/>}
 
-                            {isTimerPaused && <img src={PlayIcon} alt="Standing Stick Figure"/>}
+                            {paused && <img src={PlayIcon} alt="Standing Stick Figure"/>}
 
                             </ActionsCircle>
                         </CircleWrapper>
@@ -188,19 +187,19 @@ const TimersScreen = () => {
 
                     {/* Round timer wrapper and timer */}
                     <RoundTimerWrapper/>
-                        <Time playing={isEndNear}> 
-                            {formatTime(currHours)}: {formatTime(currMins)}: {formatTime(currSecs)}
+                        <Time> 
+                          00 : 00
                         </Time>
 
                     {/* Progress bar and status value (run, rest or the initial "stretch") */}
-                    <ProgressWrapper action={currAction}>
+                    <ProgressWrapper>
                         <img width="260px" src={ProgressRate} alt="Progress Rate"></img>
                         <div>
                             <ProgressBar/>
                         </div>
                     </ProgressWrapper>  
 
-                    <HelperText action={currAction}>{actionHelper}</HelperText>       
+                    <HelperText action={currAction}>{currAction}</HelperText>       
                 </Container>   
             </>
         );

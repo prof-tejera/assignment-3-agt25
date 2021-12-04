@@ -25,8 +25,13 @@ const AppProvider = ({ children }) => {
 
   const [newConfigs, setNewConfigs] = React.useState(false);
 
-  const archived = [
+  const [paused, setPaused ] = React.useState(false);
+  const [running, setRunning ] = React.useState(false);
+  const [currAction, setCurrAction ] = React.useState("Work");
 
+  const [currRound, setCurrRound ] = React.useState(1);
+
+  const archived = [
   ]; 
 
   const [ history, setHistory] = React.useState(archived);
@@ -85,6 +90,11 @@ const AppProvider = ({ children }) => {
             queue, setQueue, 
             newConfigs, setNewConfigs,
             history, 
+            paused, setPaused, 
+            running, setRunning,
+
+            currAction, setCurrAction, 
+            currRound, setCurrRound, 
 
         }}>
           {children}
