@@ -5,15 +5,15 @@ export const InputContext = React.createContext({});
 
 const InputProvider = ({ children }) => {
 
-  const { setNewConfigs, queue, setQueue } = React.useContext(AppContext);
+  const { setNewConfigs, queue, setQueue, setRunning } = React.useContext(AppContext);
 
  
   const [homePage, setHomePage ] = useState(true);
   const [newVisit, setNewVisit ] = useState(true);
   const [timer, setTimerType ] = useState("Stopwatch");
-  const [workSecs, setWorkSecs ] = useState(null);
-  const [restSecs, setRestSecs ] = useState(null);
-  const [rounds, setRounds ] = useState(null);
+  const [workSecs, setWorkSecs ] = useState("");
+  const [restSecs, setRestSecs ] = useState("");
+  const [rounds, setRounds ] = useState(0);
 
   const [totalTime, setTotalTime] = useState(0);
 
@@ -42,7 +42,7 @@ const InputProvider = ({ children }) => {
   
   async function addTimer(timer){
     timers.push(timer);
-    
+    setRunning(true);
     setNewConfigs(true);
     calculateTotal(timer); 
     return null;

@@ -154,7 +154,7 @@ const TimersView = ()  => {
   
   const { newVisit, setNewVisit, homePage, setHomePage } = React.useContext(InputContext);
   const { timers } = React.useContext(InputContext);
-  const { queue, archiveTimer, removeTimer, history } = React.useContext(AppContext);
+  const { queue, archiveTimer, removeTimer, history, isReady, running } = React.useContext(AppContext);
   let navigate = useNavigate();
    
   const addWorkout = () => {
@@ -165,7 +165,7 @@ const TimersView = ()  => {
       <>
      
       {/* The first home page presented to the users */}
-      {newVisit &&
+      {newVisit && isReady &&
   
       <Container>
           <Intro>
@@ -193,10 +193,9 @@ const TimersView = ()  => {
      
 
 
-    {!newVisit &&
-      <Container>
+    {!newVisit && 
            <div>
-            {queue.length > 0 &&
+            {queue.length > 0 && 
             <WorkoutSummary> 
                 <SmallerTitle>Timers</SmallerTitle>
              <div>
@@ -214,7 +213,7 @@ const TimersView = ()  => {
         <Timer/>
         </div>
       
-      </Container>
+      
     
     
     }

@@ -147,7 +147,7 @@ const TimersScreen = () => {
   const {   queue,
             actionHelper, running, paused,
             currRound, 
-            currAction, } = React.useContext(AppContext);
+            currAction, currTime } = React.useContext(AppContext);
 
     
 
@@ -173,7 +173,7 @@ const TimersScreen = () => {
                              </CircleWrapper> : <CircleWrapper/> }
 
                         {/* Right side: Icon status used by all timers */}
-                        <CircleWrapper background={Theme.dark1}>
+                        <CircleWrapper background="#171717">
                             <ActionsCircle border="1px dotted #1C91F2"> 
                             {currAction === "Work" &&  running && !paused 
                                 && <img src={RunningIcon} alt="Running Stick Figure"/>}
@@ -193,7 +193,7 @@ const TimersScreen = () => {
                     {/* Round timer wrapper and timer */}
                     <RoundTimerWrapper/>
                         <Time> 
-                          00 : 00
+                          {formatTime(currTime)}
                         </Time>
 
                     {/* Progress bar and status value (run, rest or the initial "stretch") */}

@@ -210,10 +210,10 @@ const AddWorkoutView = ()  => {
   const { setNewVisit, timer, setTimerType, workSecs, setWorkSecs, rounds, setRounds, restSecs, setRestSecs } = React.useContext(InputContext);
 
   const { addTimer, timers } = React.useContext(InputContext);
-  const { queue, setQueue } = React.useContext(AppContext);
+  const { queue, setQueue, setRunning, setNewConfigs } = React.useContext(AppContext);
 
   let btnClicked = null;
-  const [helperMsg, setHelperMsg] = useState(false);
+  
 
   const navigate = useNavigate();
   
@@ -229,6 +229,8 @@ const AddWorkoutView = ()  => {
       
       if (btnClicked === "Start") {
         // Take the user home 
+        setRunning(true);
+        setNewConfigs(true);
         navigate(`/`);
       } else if (btnClicked === "Add") {
         // Allow the user to keep adding other timers
@@ -236,7 +238,7 @@ const AddWorkoutView = ()  => {
         setWorkSecs("");
         setRestSecs("");
         setRounds("");
-        setHelperMsg("");
+        
       }
     });
   }; 

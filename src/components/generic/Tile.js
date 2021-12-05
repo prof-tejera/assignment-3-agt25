@@ -1,8 +1,8 @@
 import React from "react";
 import styled from "styled-components";
-import {Container, Row, Col} from "react-bootstrap";
+import { Col} from "react-bootstrap";
 import {BookmarkXFill } from "react-bootstrap-icons";
-import { formatTime, formatMins, formatSecs } from "../../utils/helpers";
+import { formatTime } from "../../utils/helpers";
 import { AppContext } from "../../context/AppProvider";
 
 const timerThemes = {
@@ -91,7 +91,7 @@ const TimerTile = (props) => {
                *******************************/}
               <Col>
                 <TypeTitle>Work</TypeTitle>
-                <div>{formatMins(work)}:{formatSecs(work)}</div>
+                <div>{formatTime(work)}</div>
               </Col>
 
               {/********************************
@@ -109,8 +109,7 @@ const TimerTile = (props) => {
               {type === "Tabata" && 
                  <Col>
                   <TypeTitle>Rest</TypeTitle>
-                  <div>{formatMins(rest)}:
-                  {formatSecs(rest)}</div>
+                  <div>{formatTime(rest)}</div>
                </Col> }
              
             </StatsWrapper>
