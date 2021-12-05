@@ -15,6 +15,8 @@ const InputProvider = ({ children }) => {
   const [restSecs, setRestSecs ] = useState(null);
   const [rounds, setRounds ] = useState(null);
 
+  const [totalTime, setTotalTime] = useState(0);
+
   
   const timers = [
     {
@@ -40,11 +42,32 @@ const InputProvider = ({ children }) => {
   
   async function addTimer(timer){
     timers.push(timer);
-    console.log(`hey: ${timers}`);
+    
     setNewConfigs(true);
-   
-
+    calculateTotal(timer); 
     return null;
+  }; 
+
+
+  const calculateTotal = (timer) => {
+    let totalTime; 
+
+    let type = timer.type; 
+    let work = timer.workSeconds;
+    let rounds = timer.rounds;
+    let rest = timer.restSeconds
+
+    if (type === "XY") {
+      totalTime = work * rounds; 
+    } else if (type === "Tabata") {
+      let compTimes = work + rest; 
+      totalTime = compTimes * rounds; 
+    } else {
+      totalTime = work; 
+    }; 
+
+    setTotalTime(totalTime);
+    
   }; 
   
   
@@ -60,7 +83,9 @@ const InputProvider = ({ children }) => {
            timers, addTimer,
            workSecs, setWorkSecs, 
            restSecs, setRestSecs, 
-           rounds, setRounds
+           rounds, setRounds, 
+
+           totalTime
             
         }}>
         

@@ -20,7 +20,7 @@ const ButtonsContainer = styled.div`
     margin: 0 auto;
     position: relative;
     margin-top: 2.5rem;
-    top: -6.5rem;
+    top: -2rem;
 `;
 
 const ResetBtn = styled(Button)`

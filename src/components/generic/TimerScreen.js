@@ -1,5 +1,6 @@
 import React from "react";
 import { AppContext } from "../../context/AppProvider";
+import { InputContext } from "../../context/InputProvider";
 import { formatTime } from "../../utils/helpers";
 
 import styled from "styled-components";
@@ -24,14 +25,16 @@ const Container = styled.div`
     margin: 0 auto;
     h3 {
       margin-bottom: 10px;
+      font-size: 25px;
     }
 `;
 
 const RoundTimerWrapper = styled.div`
-  height: 260px;
-  width: 260px;
+  height: 245px;
+  width: 245px;
   margin: 0 auto;
   border-radius: 50%;
+  padding-top: 5px;
   background-image: url(${OperationsCircle});
   background-repeat: no-repeat;
   background-position: center;
@@ -48,7 +51,8 @@ const TopActionsContainer = styled.div`
     align-content: center;
     margin-bottom: -3.7rem !important;
     width: 70%;
-    margin: 0 auto;  
+    margin: 0 auto; 
+    
 `;
 
 const Time = styled.h1`
@@ -56,11 +60,10 @@ const Time = styled.h1`
     width: 100%;
     margin: 0 auto;
     position: relative;
-    top: -195px;
+    top: -190px;
     font-size: 70px;
     color: white;
     font-family: league-gothic;
-    background-color: #1A1A1A63;
     letter-spacing: 3px;
     font-weight: 300;  
     animation: red 1s, increase 1s;
@@ -133,8 +136,8 @@ const HelperText = styled.p`
 
 const CircleWrapper = styled.div`
     border-radius: 50%;
-    width: 75px;
-    height: 75px;
+    width: 65px;
+    height: 65px;
     background: ${(props) => props.background || "transparent"};
 `;
 
@@ -145,6 +148,8 @@ const TimersScreen = () => {
             actionHelper, running, paused,
             currRound, 
             currAction, } = React.useContext(AppContext);
+
+    
 
  const timerType = queue[0].type;
 

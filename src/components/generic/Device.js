@@ -6,82 +6,55 @@ import { formatTime } from "../../utils/helpers";
 
 
 const sizeMapping = {
-    width: 330,
-    height: 620,
+    width: 350,
+    height: 580,
 };
+
+const ExteriorWrapper = styled.div`
+    width: ${(props) => props.width + 0}px;
+    height: ${(props) => props.height + 0}px;
+    border: 1px solid red;
+    display: flex;
+    flex-direction: row;
+    wrap-direction: nowrap;
+    justify-content: center;
+    align-items: center;
+    color: #458FEB;
+    border: 1px solid grey;
+    border-radius: 45px;
+
+`; 
 
 const ScreenWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   color: #458FEB;
+  position: relative;
+  
+  
 `;
 
 const Screen = styled.div`
    position: relative;
-   background: #1A1A1A;
+   background: #171717;
    width: ${(props) => props.width}px;
    height: ${(props) => props.height}px;
-   border: 16px ridge #09090A;
-   border-radius: 40px;
-   -webkit-box-shadow: outset 0px 0px 2px 1px rgba(0,0,0,0.33); 
-   box-shadow: outset 0px 0px 2px 1px rgba(0,0,0,0.33); 
+   border-radius: 45px;
+   padding-top: 30px;
+   border: 10px solid black;
 `;
 
-const StatusBar = styled.div`
-    width: ${(props) => props.width}px;
-    height: 45px;
-    border-top-left-radius: 40px;
-    border-top-right-radius: 40px;
-    background-image: linear-gradient(to bottom, #161616, #171717, 
-                                      #181818, #191919, #1a1a1a);  
-                                
-`;
 
-const Notch = styled.div`
-    position: relative;
-    height: 30px;
-    width: 185px;
-    background: black;
-    margin: 0 auto;
-    border-bottom-left-radius: 29px;
-    border-bottom-right-radius: 29px;
-    border: 1px solid #1f1f1f;
-`;
-
-const Speaker = styled.div`
-    position: relative;
-    top: 9px;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    height: 6px;
-    width: 45px;
-    background-color: #333333;
-    border-radius: 8px;
-    box-shadow: inset 0px -1px 0px rgba(255, 255, 255, 0.2);
-`;
-
-const Camera = styled.div`
-    position: relative;
-    left: 75%;
-    top: 3px;
-    transform: translate(-50%, -50%);
-    width: 10px;
-    height: 10px;
-    background-color: #333333;
-    border-radius: 12px;
-    box-shadow: inset 0px -1px 0px rgba(255, 255, 255, 0.2);
-    border: 1px inset #25374E;
-`;
 
 const NavWrapper = styled.div`
     background: #323131;
     position: absolute;
     bottom: 0;
-    height: 95px;
+    height: 75px;
     width: 100%;
-    border-bottom-left-radius: 25px;
-    border-bottom-right-radius: 25px;
+    border-bottom-left-radius: 45px;
+    border-bottom-right-radius: 45px;
     color: grey;
     display: flex;
     flex-direction: row;
@@ -90,17 +63,59 @@ const NavWrapper = styled.div`
     align-items: center;
     align-content: center;
     font-size: 17px;
+    
         
 `;
 
 
 const RunTime = styled.div`
-    color: ${({action, started }) => action.includes("Run") && started ? "#C1BEBE" : "grey"};
+    color: ${({action, started }) => action.includes("Work") && started ? "#C1BEBE" : "grey"};
 `;
 
 const RestTime = styled.div`
     color: ${({action, started}) => action.includes("Rest") && started ? "#C1BEBE" : "grey"};
 `;
+
+
+const BottomStats = styled.div`
+
+    font-size: 15px;
+    position: relative;
+    top: -180px;
+    z-index: 1;
+    left: -3px;
+    display: inline-flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    align-content: space-between;
+    div {
+        padding: 0 2rem;
+        color: #A09D9D;
+        span {
+            color: #9CCCC9D1;
+            font-size: 18px;
+        }
+        
+    }
+
+    
+`;
+
+const TotalTime = styled.span`
+    text-align: right;
+    font-size: 20px !important;
+
+`;
+
+const ElapsedTime = styled(TotalTime)`
+    text-align: right !important;
+   
+   
+`;
+
+
 
 
 
@@ -110,6 +125,8 @@ const Device = ({...props}) => {
    
 
     const { queue, currAction, currRound, running } = React.useContext(AppContext);
+    const {totalTime } = React.useContext(InputContext)
+
 
     const workTime = queue[0].workSeconds;
     const timerType = queue[0].type;
@@ -118,15 +135,23 @@ const Device = ({...props}) => {
     
     return (
         <>
+
+        
+       
         <ScreenWrapper>
+           
             <Screen width={sizeMapping.width} height={sizeMapping.height}>
-                <StatusBar>
-                    <Notch>
-                        <Speaker/>
-                        <Camera/>
-                    </Notch>
-                </StatusBar>
+           
                 {props.children}
+                <BottomStats>
+                    <div> <ElapsedTime>00:00 </ElapsedTime>
+                        <div>Elapsed</div>
+                    </div>
+                    <div> <TotalTime> {formatTime(totalTime)} </TotalTime>
+                        <div>Total</div>
+                    </div>
+                   
+                </BottomStats>
                 <NavWrapper>
                     <RunTime action={currAction} started={running}>
                         {formatTime(workTime)}
@@ -162,8 +187,10 @@ const Device = ({...props}) => {
                     </RestTime>
                     }
                 </NavWrapper>
+                
             </Screen>
         </ScreenWrapper>
+       
         </>
     );
     }

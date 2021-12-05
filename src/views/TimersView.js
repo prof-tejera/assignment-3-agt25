@@ -60,8 +60,8 @@ const TimerTitle = styled.h1`
 `;
 
 const SmallerTitle = styled(TimerTitle)`
-  font-size: 32px;
-
+  font-size: 55px;
+  
 
 `;
 
@@ -110,6 +110,45 @@ const TileContainer = styled.div`
   margin: 3rem;
 `;
 
+const WorkoutSummary = styled.div`
+ 
+  padding: 1rem;
+  margin-top: -3rem;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  align-content: normal;
+  font-size: 20px;
+
+`;
+
+const SummaryLabels = styled.span`
+  text-align: right;
+  padding: 1rem;
+  color: #48683F;
+  
+  
+
+`;
+
+const SummaryStats = styled.div`
+  text-align: left;
+  padding: 0 0.5rem;
+  color: #90693A;
+  
+
+`;
+
+const QueueWrapper = styled.div`
+  
+border: 2px dotted white;
+border-radius: 300px 300px 0px 0px;
+margin-top: 1rem;
+
+`;
+
 const TimersView = ()  => {
 
   
@@ -155,11 +194,27 @@ const TimersView = ()  => {
 
 
     {!newVisit &&
-      <div>
-          {/* <SmallerTitle></SmallerTitle>
-          <img src={HeartRate} width="300px" alt="Heartbeat line vector"/> */}
+      <Container>
+           <div>
+            {queue.length > 0 &&
+            <WorkoutSummary> 
+                <SmallerTitle>Timers</SmallerTitle>
+             <div>
+    
+              <SummaryLabels>Workout 0/10</SummaryLabels>
+              <SummaryLabels>Current XY</SummaryLabels>
+              <SummaryLabels>Next Stopwatch</SummaryLabels>
+
+             </div>
+
+             
+              
+            </WorkoutSummary>
+        }
         <Timer/>
-      </div>
+        </div>
+      
+      </Container>
     
     
     }
@@ -167,7 +222,7 @@ const TimersView = ()  => {
 
      {/* If there's timers already configured, show the active queue */}
      {queue.length > 0 && !newVisit &&
-        <div>
+        <QueueWrapper>
         <TileIntro>Active Queue</TileIntro>
         <ActiveTiles>
          {queue.map((timer, index) => (
@@ -177,7 +232,7 @@ const TimersView = ()  => {
               )   
           )}
       </ActiveTiles>
-      <button onClick={(e) => archiveTimer()}>Archive</button>  </div>
+      <button onClick={(e) => archiveTimer()}>Archive</button>  </QueueWrapper>
     }
 
 
