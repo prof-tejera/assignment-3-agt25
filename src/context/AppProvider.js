@@ -42,6 +42,10 @@ const AppProvider = ({children}) => {
     const [history, setHistory] = React.useState(archived);
 
     const [isTimerReady, setIsTimerReady ] = React.useState(false);
+
+    const [currTimer, setCurrTimer ] = React.useState(0);
+
+    
     
 
     const initialTimers = [
@@ -64,24 +68,15 @@ const AppProvider = ({children}) => {
     ];
 
     const archiveTimer = useCallback(() => {
-        console.log("archiving!!!");
-        if (queue.length !== 0) {
-          // Archive the finished timer
-          let toArchive = queue[0];
-          setHistory([
-              ...history,
-              toArchive
-          ]);
-
-          // Remove the finished timer
-          let filteredQueue = queue.filter((_, index) => index !== 0);
-          setQueue(filteredQueue);
-          setFinished(false);
-        } else {
-          setFinished(true);
-        }
+      console.log('finished!!!!');
+       if (currTimer + 1 !== queue.length) {
+         setCurrTimer(currTimer + 1);
+         setFinished(false);
+       } else {
+         setFinished(true);
+       }; 
       
-    }, [finished])
+    }, [finished, currTimer])
 
     
     
@@ -100,45 +95,40 @@ const AppProvider = ({children}) => {
     
         if (paused || finished || queue.length === 0) return;
         
-
-        
-        
         // Call the end one Conditionally handles the time hitting 0:0:0
         if (currTime === 0) {
-
-            if (queue[0].type === "XY") {
+            if (queue[currTimer].type === "XY") {
                 // Handle end of XY
-                if (currRound < queue[0].rounds) {
+                if (currRound < queue[currTimer].rounds) {
                     setCurrRound(currRound + 1);
-                    setCurrTime(queue[0].workSeconds)
+                    setCurrTime(queue[currTimer].workSeconds)
                 } else {
                     setFinished(true);
                 };
-            } else if (queue[0].type === "Tabata") {
-              
+            } else if (queue[currTimer].type === "Tabata") {
                 // Handle end of Tabata
                 if (currAction === "Work") {
                     setCurrAction("Rest");
-                    setCurrTime(queue[0].restSeconds)
+                    setCurrTime(queue[currTimer].restSeconds)
                 } else if (currAction === "Rest") {
-                    if (currRound < queue[0].rounds) {
+                    if (currRound < queue[currTimer].rounds) {
                       setCurrRound(currRound + 1);
                       setCurrAction("Work");
-                      setCurrTime(queue[0].workSeconds)
+                      setCurrTime(queue[currTimer].workSeconds)
                     } else {
                       setFinished(true);
                     }; 
                 } else {
                     setFinished(true);
                 };
-            } else if (queue[0].type === "Countdown") {
+            } else if (queue[currTimer].type === "Countdown") {
                 // Handle end of countdown
                 setFinished(true);
                 console.log('FINISHED');
             }
         } else {
             setCurrTime(currTime - 1);
-        }
+        };
 
     }, [currAction, currTime, currRound, queue, paused, finished]);
 
@@ -147,11 +137,11 @@ const AppProvider = ({children}) => {
     // Populates the appropriate run / rest values when the currAction changes
     useEffect(() => {
         if (running && queue) {
-          let timerType = queue[0].type;
+          let timerType = queue[currTimer].type;
           console.log(timerType);
           
         }
-    }, [currAction, queue, running])
+    }, [currAction, queue, running, currTimer])
 
 
 
@@ -167,14 +157,15 @@ const AppProvider = ({children}) => {
         if (finished || paused || queue.length === 0) return;
         
         // Handle the stopwatch hitting the target time values
-        if (currTime === queue[0].workSeconds) {
-            setFinished(true);
-
-        } else {
+        if (currTime !== parseInt(queue[currTimer].workSeconds)) {
             setCurrTime(currTime + 1);
+            console.log(queue[currTimer].workSeconds)
+            
+        } else {
+            setFinished(true);
         }
 
-    }, [currTime, paused, finished]);
+    }, [currAction, currTime, queue, paused, finished]);
 
 
 
@@ -191,31 +182,30 @@ const AppProvider = ({children}) => {
       useEffect(() => {
         if (queue && running) {
           
-          if (queue[0].type === "XY" || queue[0].type === "Tabata") {
+          if (queue[currTimer].type === "XY" || queue[currTimer].type === "Tabata") {
               if (currAction === "Work") {
-                  setCurrTime(queue[0].workSeconds);
+                  setCurrTime(queue[currTimer].workSeconds);
               } else if (currAction.includes("Rest")) {
-                  setCurrTime(queue[0].restSeconds); 
+                  setCurrTime(queue[currTimer].restSeconds); 
               } 
-          } else if (queue[0].type === "Stopwatch") {
+          } else if (queue[currTimer].type === "Stopwatch") {
             // Stopwatch starts at 0 
             setCurrAction("Work"); 
             setCurrTime(0);
           } else {
-            setCurrTime(queue[0].workSeconds);
+            setCurrTime(queue[currTimer].workSeconds);
             setCurrAction("Work");
           }; 
-
           setIsTimerReady(true);
         }
-      }, [currAction, queue, running, isTimerReady])
+      }, [currAction, queue, running, isTimerReady, currTimer])
   
 
     useEffect(() => {
       let intervalId;
 
       if (running && queue && isTimerReady)  {
-          let timerType = queue[0].type;
+          let timerType = queue[currTimer].type;
           switch (timerType) {
               case "Stopwatch":
                   intervalId = setInterval(() => countUp(), 1000);
@@ -280,7 +270,9 @@ const AppProvider = ({children}) => {
 
                 currTime, 
                 setCurrTime, 
-                finished
+                finished,
+
+                currTimer
                 
             }}>
             {children}

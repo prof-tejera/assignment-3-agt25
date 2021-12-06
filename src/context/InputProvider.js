@@ -21,25 +21,7 @@ const InputProvider = ({ children }) => {
 
   
   const timers = [
-    {
-      type: 'XY',
-      rounds: 1, 
-      workSeconds: 5, 
-    }, 
-    {
-      type: 'Stopwatch', 
-      workSeconds: 10, 
-    },
-    {
-      type: 'Tabata', 
-      workSeconds: 3, 
-      rounds: 3, 
-      restSeconds: 4
-    },  
-    {
-      type: 'Countdown',
-      workSeconds: 10, 
-    }
+    
   ]; 
   
   async function addTimer(timer){

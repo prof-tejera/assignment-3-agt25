@@ -41,7 +41,7 @@ const ResetBtn = styled(Button)`
 
 const Timer = () => {
   
-  const { queue, paused, setPaused, history } = React.useContext(AppContext);
+  const { queue, paused, setPaused, currTimer } = React.useContext(AppContext);
 
 
   const handleActionBtn = (e) => {
@@ -59,7 +59,7 @@ const Timer = () => {
     return (
       <div>
       {/* Device component */}
-      <Device type="phone" currentTimer={queue[0].type}>
+      <Device type="phone" currentTimer={queue[currTimer].type}>
           {/* Timer screen */}
            
               <TimerScreen/> 

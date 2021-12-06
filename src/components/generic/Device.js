@@ -124,14 +124,14 @@ const Device = ({...props}) => {
 
    
 
-    const { queue, currAction, currRound, running } = React.useContext(AppContext);
+    const { queue, currAction, currRound, running, currTimer } = React.useContext(AppContext);
     const {totalTime } = React.useContext(InputContext)
 
 
-    const workTime = queue[0].workSeconds; 
-    const timerType = queue[0].type; 
-    const targetRounds = queue[0].rounds;
-    const restTime = queue[0].restSeconds;
+    const workTime = queue[currTimer].workSeconds; 
+    const timerType = queue[currTimer].type; 
+    const targetRounds = queue[currTimer].rounds;
+    const restTime = queue[currTimer].restSeconds;
     
     return (
         <>

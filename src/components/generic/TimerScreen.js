@@ -147,16 +147,16 @@ const TimersScreen = () => {
   const {   queue,
             actionHelper, running, paused,
             currRound, 
-            currAction, currTime } = React.useContext(AppContext);
+            currAction, currTime, currTimer } = React.useContext(AppContext);
 
     
 
- const timerType = queue[0].type;
+ const timerType = queue[currTimer].type;
 
         return (
             <>
                 <Container>
-                    <h3>{queue[0].type}</h3>
+                    <h3>{queue[currTimer].type}</h3>
 
                     {/* Top buttons above the timer */}
                     <TopActionsContainer>
