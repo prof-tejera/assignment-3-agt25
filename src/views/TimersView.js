@@ -71,6 +71,7 @@ const StyledLink = styled(Link)`
 text-decoration: none;
 font-size: 24px;
 letter-spacing: 1px;
+color: #866A36 !important; 
 `;
 
 
@@ -161,10 +162,9 @@ const AddMoreBtn = styled(StartButton)`
   position: relative;
   top: -25px;
   
-
-
-
 `;
+
+
 
 const TimersView = ()  => {
 

@@ -19,7 +19,7 @@ const InputProvider = ({ children }) => {
 
   const [btnClicked, setBtnClicked] = useState("");
 
-  const [currAddition, setCurrAddition] = useState(0);
+  
 
   
   const timers = [
@@ -77,8 +77,7 @@ const InputProvider = ({ children }) => {
 
            totalTime, setBtnClicked, btnClicked,
 
-           currAddition, setCurrAddition
-            
+          
         }}>
         
         {children}

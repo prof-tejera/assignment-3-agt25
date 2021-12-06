@@ -178,7 +178,7 @@ const AddBtn = styled.button`
 `;
 
 
-const CancelBtn = styled.button`
+const HomeBtn = styled.button`
   height: 60px;
   font-size: 18px;
   background-color: transparent;
@@ -225,18 +225,26 @@ const AddWorkoutView = ()  => {
   const navigate = useNavigate();
   
   const saveTimer = (e) => {
+
     e.preventDefault();
+
     let timerObj = formatInput();
     addTimer(timerObj).then((val) => {
+
+      // Push to the queue
       let oldQueue = queue;
       oldQueue.push(timerObj)
       setQueue(oldQueue);
-      setNewVisit(false);
+      
 
+      // Reset Vals 
+      setNewVisit(false);
       setTimerType("Stopwatch");
       setWorkSecs("");
       setRestSecs("");
       setRounds("");
+
+      
       
       if (btnClicked === "Start") {
         // Take the user home 
@@ -248,7 +256,6 @@ const AddWorkoutView = ()  => {
         // Allow the user to keep adding other timers
         setBtnClicked("Add");
         
-       
       }
     });
   }; 
@@ -259,6 +266,8 @@ const AddWorkoutView = ()  => {
       navigate(`/`);
     }
   }, [running, queue])
+
+  
 
   const checkTimeInput = (e) => {
     let id = e.target.id;
@@ -385,7 +394,7 @@ const AddWorkoutView = ()  => {
       <AddStartBtn type="submit" onClick={(e) => btnClicked = "Start"}> Add and Start</AddStartBtn>
     </BtnsWrapper>
 
-      <CancelBtn onClick={() => navigate("/")}>Go Back</CancelBtn>
+      <HomeBtn onClick={() => navigate("/")}>Home</HomeBtn>
      
       </Form>
       </Container>
