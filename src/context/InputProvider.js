@@ -28,17 +28,17 @@ const InputProvider = ({ children }) => {
     }, 
     {
       type: 'Stopwatch', 
-      workSeconds: 120, 
+      workSeconds: 10, 
     },
     {
       type: 'Tabata', 
-      workSeconds: 120, 
-      rounds: 8, 
-      restSeconds: 110
+      workSeconds: 3, 
+      rounds: 3, 
+      restSeconds: 4
     },  
     {
       type: 'Countdown',
-      workSeconds: 180, 
+      workSeconds: 10, 
     }
   ]; 
   

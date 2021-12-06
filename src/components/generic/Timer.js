@@ -41,7 +41,7 @@ const ResetBtn = styled(Button)`
 
 const Timer = () => {
   
-  const { queue, paused, setPaused } = React.useContext(AppContext);
+  const { queue, paused, setPaused, history } = React.useContext(AppContext);
 
 
   const handleActionBtn = (e) => {

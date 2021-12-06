@@ -64,7 +64,7 @@ const AppProvider = ({children}) => {
     ];
 
     const archiveTimer = useCallback(() => {
-      if (finished) {
+        console.log("archiving!!!");
         if (queue.length !== 0) {
           // Archive the finished timer
           let toArchive = queue[0];
@@ -76,23 +76,30 @@ const AppProvider = ({children}) => {
           // Remove the finished timer
           let filteredQueue = queue.filter((_, index) => index !== 0);
           setQueue(filteredQueue);
-        };
-      }
+          setFinished(false);
+        } else {
+          setFinished(true);
+        }
+      
     }, [finished])
 
     
     
-    const handleFinish = useCallback(() => {
-      archiveTimer(); 
-    }, [archiveTimer])
+    
+
+    useEffect(() => {
+      if (finished) {
+        archiveTimer(); 
+
+      }
+
+    }, [finished])
 
 
     const countDown = useCallback(() => {
     
         if (paused || finished || queue.length === 0) return;
-        if (finished) {
-          handleFinish();
-        };
+        
 
         
         
@@ -108,11 +115,19 @@ const AppProvider = ({children}) => {
                     setFinished(true);
                 };
             } else if (queue[0].type === "Tabata") {
+              
                 // Handle end of Tabata
                 if (currAction === "Work") {
                     setCurrAction("Rest");
+                    setCurrTime(queue[0].restSeconds)
                 } else if (currAction === "Rest") {
-                    setCurrRound(currRound + 1);
+                    if (currRound < queue[0].rounds) {
+                      setCurrRound(currRound + 1);
+                      setCurrAction("Work");
+                      setCurrTime(queue[0].workSeconds)
+                    } else {
+                      setFinished(true);
+                    }; 
                 } else {
                     setFinished(true);
                 };
@@ -125,7 +140,9 @@ const AppProvider = ({children}) => {
             setCurrTime(currTime - 1);
         }
 
-    }, [currAction, currTime, currRound, queue, paused, finished, handleFinish]);
+    }, [currAction, currTime, currRound, queue, paused, finished]);
+
+
 
     // Populates the appropriate run / rest values when the currAction changes
     useEffect(() => {
@@ -147,8 +164,7 @@ const AppProvider = ({children}) => {
        * stars at 0 (currValues)
        * and counts up to the target values (runSecs, etc.)
        ******************************************************/
-        if (finished || paused) 
-            return;
+        if (finished || paused || queue.length === 0) return;
         
         // Handle the stopwatch hitting the target time values
         if (currTime === queue[0].workSeconds) {
@@ -158,20 +174,16 @@ const AppProvider = ({children}) => {
             setCurrTime(currTime + 1);
         }
 
-    }, []);
+    }, [currTime, paused, finished]);
 
 
 
     // Effect for FOUT
     useEffect(() => {
         /************************************************
-   * Checks if the fonts are ready; handles FOUT
-   ***********************************************/
-        document
-            .fonts
-            .ready
-            .then(() => setIsReady(true));
-
+        * Checks if the fonts are ready; handles FOUT
+        ***********************************************/
+        document.fonts.ready.then(() => setIsReady(true));
         
     }, []);
 
@@ -179,17 +191,21 @@ const AppProvider = ({children}) => {
       useEffect(() => {
         if (queue && running) {
           
-          if (queue[0].type !== "Stopwatch") {
+          if (queue[0].type === "XY" || queue[0].type === "Tabata") {
               if (currAction === "Work") {
                   setCurrTime(queue[0].workSeconds);
-                  console.log(currTime);
               } else if (currAction.includes("Rest")) {
                   setCurrTime(queue[0].restSeconds); 
-              };
-          } else {
+              } 
+          } else if (queue[0].type === "Stopwatch") {
             // Stopwatch starts at 0 
+            setCurrAction("Work"); 
             setCurrTime(0);
-          }
+          } else {
+            setCurrTime(queue[0].workSeconds);
+            setCurrAction("Work");
+          }; 
+
           setIsTimerReady(true);
         }
       }, [currAction, queue, running, isTimerReady])

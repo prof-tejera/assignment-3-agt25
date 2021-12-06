@@ -128,8 +128,8 @@ const Device = ({...props}) => {
     const {totalTime } = React.useContext(InputContext)
 
 
-    const workTime = queue[0].workSeconds;
-    const timerType = queue[0].type;
+    const workTime = queue[0].workSeconds; 
+    const timerType = queue[0].type; 
     const targetRounds = queue[0].rounds;
     const restTime = queue[0].restSeconds;
     
