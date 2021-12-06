@@ -43,6 +43,17 @@ const Timer = () => {
   
   const { queue, paused, setPaused } = React.useContext(AppContext);
 
+
+  const handleActionBtn = (e) => {
+    console.log(e.target.innerHTML);
+    let btnType = e.target.innerHTML;
+    if (btnType === "Pause") {
+      setPaused(true); 
+    } else {
+      setPaused(false); 
+    }
+  }
+
   
   
     return (
@@ -74,8 +85,8 @@ const Timer = () => {
                   {/* Pause, New, or Start button */}
                     <ActionButton 
                                   type={paused ? "Start" : "Pause"}
-                                  onClick={(e) => console.log('Pause')}> 
-                                  Pause
+                                  onClick={(e) => handleActionBtn(e)}> 
+                                  {paused ? "Start" : "Pause"}
                     </ActionButton>
                 </ButtonsContainer>
               </div>

@@ -42,7 +42,7 @@ ActionsCircle.propTypes = {
 
 ActionsCircle.defaultProps = {
   border: "none",
-  background: "#171717",
+  background: "#1A1A1A",
   color: "#458FEB",
   fontSize: "45px",
   fontWeight: 600,

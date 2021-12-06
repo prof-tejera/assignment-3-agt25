@@ -23,8 +23,8 @@ const InputProvider = ({ children }) => {
   const timers = [
     {
       type: 'XY',
-      rounds: 3, 
-      workSeconds: 10, 
+      rounds: 1, 
+      workSeconds: 5, 
     }, 
     {
       type: 'Stopwatch', 

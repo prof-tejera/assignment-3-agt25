@@ -164,7 +164,7 @@ const TimersScreen = () => {
                         {/* Left side: Conditional 'Rounds' status used by XY and TABATA */}
                         {timerType === "XY" || timerType === "Tabata" ? 
                             
-                            <CircleWrapper background={Theme.dark1}>
+                            <CircleWrapper background={"#1A1A1A"}>
                                
                               
                                 <ActionsCircle fontSize="50px">
@@ -173,7 +173,7 @@ const TimersScreen = () => {
                              </CircleWrapper> : <CircleWrapper/> }
 
                         {/* Right side: Icon status used by all timers */}
-                        <CircleWrapper background="#171717">
+                        <CircleWrapper background="#1A1A1A">
                             <ActionsCircle border="1px dotted #1C91F2"> 
                             {currAction === "Work" &&  running && !paused 
                                 && <img src={RunningIcon} alt="Running Stick Figure"/>}

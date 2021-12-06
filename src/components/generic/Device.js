@@ -37,12 +37,12 @@ const ScreenWrapper = styled.div`
 
 const Screen = styled.div`
    position: relative;
-   background: #171717;
+   background: #1A1A1A;
    width: ${(props) => props.width}px;
    height: ${(props) => props.height}px;
    border-radius: 45px;
    padding-top: 30px;
-   border: 10px solid black;
+   border: 12px solid black;
 `;
 
 
@@ -69,11 +69,11 @@ const NavWrapper = styled.div`
 
 
 const RunTime = styled.div`
-    color: ${({action, started }) => action.includes("Work") && started ? "#C1BEBE" : "grey"};
+    color: ${({action, started }) => action.includes("Work") && started ? "#A09D9D" : "grey"};
 `;
 
 const RestTime = styled.div`
-    color: ${({action, started}) => action.includes("Rest") && started ? "#C1BEBE" : "grey"};
+    color: ${({action, started}) => action.includes("Rest") && started ? "#A09D9D" : "grey"};
 `;
 
 

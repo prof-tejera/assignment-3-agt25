@@ -63,15 +63,40 @@ const AppProvider = ({children}) => {
         }
     ];
 
+    const archiveTimer = useCallback(() => {
+      if (finished) {
+        if (queue.length !== 0) {
+          // Archive the finished timer
+          let toArchive = queue[0];
+          setHistory([
+              ...history,
+              toArchive
+          ]);
+
+          // Remove the finished timer
+          let filteredQueue = queue.filter((_, index) => index !== 0);
+          setQueue(filteredQueue);
+        };
+      }
+    }, [finished])
+
     
     
+    const handleFinish = useCallback(() => {
+      archiveTimer(); 
+    }, [archiveTimer])
 
 
     const countDown = useCallback(() => {
     
-        if (paused || finished) return;
-        console.log(`counting down!!!! ${currTime}`)
-        // call the end one Conditionally handles the time hitting 0:0:0
+        if (paused || finished || queue.length === 0) return;
+        if (finished) {
+          handleFinish();
+        };
+
+        
+        
+        // Call the end one Conditionally handles the time hitting 0:0:0
         if (currTime === 0) {
 
             if (queue[0].type === "XY") {
@@ -91,15 +116,16 @@ const AppProvider = ({children}) => {
                 } else {
                     setFinished(true);
                 };
-            } else {
+            } else if (queue[0].type === "Countdown") {
                 // Handle end of countdown
                 setFinished(true);
+                console.log('FINISHED');
             }
         } else {
             setCurrTime(currTime - 1);
         }
 
-    }, [currAction, currTime, currRound, queue, paused, finished]);
+    }, [currAction, currTime, currRound, queue, paused, finished, handleFinish]);
 
     // Populates the appropriate run / rest values when the currAction changes
     useEffect(() => {
@@ -111,6 +137,8 @@ const AppProvider = ({children}) => {
     }, [currAction, queue, running])
 
 
+
+    
 
 
     const countUp = useCallback(() => {
@@ -150,7 +178,7 @@ const AppProvider = ({children}) => {
       // Populates the appropriate run / rest values when the currAction changes
       useEffect(() => {
         if (queue && running) {
-          console.log('hey43456543');
+          
           if (queue[0].type !== "Stopwatch") {
               if (currAction === "Work") {
                   setCurrTime(queue[0].workSeconds);
@@ -159,7 +187,8 @@ const AppProvider = ({children}) => {
                   setCurrTime(queue[0].restSeconds); 
               };
           } else {
-            console.log('hey');
+            // Stopwatch starts at 0 
+            setCurrTime(0);
           }
           setIsTimerReady(true);
         }
@@ -208,21 +237,9 @@ const AppProvider = ({children}) => {
 
     };
 
-    async function archiveTimer() {
+   
 
-        if (queue.length !== 0) {
-            // Archive the finished timer
-            let toArchive = queue[0];
-            setHistory([
-                ...history,
-                toArchive
-            ]);
-
-            // Remove the finished timer
-            let filteredQueue = queue.filter((_, index) => index !== 0);
-            setQueue(filteredQueue);
-        };
-    };
+    
 
     return (
         <AppContext.Provider
@@ -246,7 +263,8 @@ const AppProvider = ({children}) => {
                 setCurrRound, 
 
                 currTime, 
-                setCurrTime
+                setCurrTime, 
+                finished
                 
             }}>
             {children}
