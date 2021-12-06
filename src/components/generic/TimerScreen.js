@@ -64,7 +64,7 @@ const Time = styled.h1`
     font-size: 70px;
     color: white;
     font-family: league-gothic;
-    letter-spacing: 3px;
+    letter-spacing: 10px;
     font-weight: 300;  
     animation: red 1s, increase 1s;
     animation: ${({playing}) => playing ? "red 1s, increase 1s" : "none"};

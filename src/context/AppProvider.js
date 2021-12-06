@@ -13,7 +13,7 @@ export const AppContext = React.createContext({});
 const AppProvider = ({children}) => {
 
     // Import target rounds, run time, rest time from InputContext
-    const {timers} = React.useContext(InputContext);
+    const { timers, btnClicked } = React.useContext(InputContext);
 
     // Document and fonts state
     const [isReady, setIsReady] = useState(false);
@@ -27,7 +27,7 @@ const AppProvider = ({children}) => {
     const [running, setRunning] = React.useState(false);
     const [currAction, setCurrAction] = React.useState("Work");
 
-    const [currRound, setCurrRound] = React.useState(0);
+    const [currRound, setCurrRound] = React.useState(1);
 
     const [totalElapsed, setTotalElapsed] = React.useState(0);
 
@@ -41,6 +41,8 @@ const AppProvider = ({children}) => {
 
     const [history, setHistory] = React.useState(archived);
 
+    const [isTimerReady, setIsTimerReady ] = React.useState(false);
+    
 
     const initialTimers = [
         {
@@ -61,9 +63,13 @@ const AppProvider = ({children}) => {
         }
     ];
 
+    
+    
+
+
     const countDown = useCallback(() => {
-        if (paused || finished || !running) 
-            return;
+    
+        if (paused || finished) return;
         console.log(`counting down!!!! ${currTime}`)
         // call the end one Conditionally handles the time hitting 0:0:0
         if (currTime === 0) {
@@ -72,6 +78,7 @@ const AppProvider = ({children}) => {
                 // Handle end of XY
                 if (currRound < queue[0].rounds) {
                     setCurrRound(currRound + 1);
+                    setCurrTime(queue[0].workSeconds)
                 } else {
                     setFinished(true);
                 };
@@ -89,18 +96,22 @@ const AppProvider = ({children}) => {
                 setFinished(true);
             }
         } else {
-            currElapsed(currElapsed - 1);
+            setCurrTime(currTime - 1);
         }
 
-    }, []);
+    }, [currAction, currTime, currRound, queue, paused, finished]);
 
     // Populates the appropriate run / rest values when the currAction changes
     useEffect(() => {
-        if (running) {
+        if (running && queue) {
           let timerType = queue[0].type;
           console.log(timerType);
+          
         }
     }, [currAction, queue, running])
+
+
+
 
     const countUp = useCallback(() => {
         /*******************************************************
@@ -121,6 +132,8 @@ const AppProvider = ({children}) => {
 
     }, []);
 
+
+
     // Effect for FOUT
     useEffect(() => {
         /************************************************
@@ -130,12 +143,62 @@ const AppProvider = ({children}) => {
             .fonts
             .ready
             .then(() => setIsReady(true));
+
+        
     }, []);
 
-    useEffect(() => {
-        
+      // Populates the appropriate run / rest values when the currAction changes
+      useEffect(() => {
+        if (queue && running) {
+          console.log('hey43456543');
+          if (queue[0].type !== "Stopwatch") {
+              if (currAction === "Work") {
+                  setCurrTime(queue[0].workSeconds);
+                  console.log(currTime);
+              } else if (currAction.includes("Rest")) {
+                  setCurrTime(queue[0].restSeconds); 
+              };
+          } else {
+            console.log('hey');
+          }
+          setIsTimerReady(true);
+        }
+      }, [currAction, queue, running, isTimerReady])
+  
 
-    }, [running, countDown, countUp, queue])
+    useEffect(() => {
+      let intervalId;
+
+      if (running && queue && isTimerReady)  {
+          let timerType = queue[0].type;
+          switch (timerType) {
+              case "Stopwatch":
+                  intervalId = setInterval(() => countUp(), 1000);
+                  break;
+              case "Countdown":
+                  // Pass in the targets here
+                  intervalId = setInterval(() => countDown(), 1000);
+                  break;
+              case "XY":
+                  intervalId = setInterval(() => countDown(), 1000);
+                  break;
+              case "Tabata":
+                  intervalId = setInterval(() => countDown(), 1000);
+                  break;
+              default:
+                 setCurrAction("YEAH");
+          };
+      }
+      // Clear interval when app unmounts
+      return() => clearInterval(intervalId);
+
+  }, [running, countDown, countUp, queue, isTimerReady])
+
+
+    
+
+
+
 
     async function removeTimer(id) {
 
@@ -180,7 +243,11 @@ const AppProvider = ({children}) => {
                 currAction,
                 setCurrAction,
                 currRound,
-                setCurrRound
+                setCurrRound, 
+
+                currTime, 
+                setCurrTime
+                
             }}>
             {children}
         </AppContext.Provider>

@@ -13,16 +13,18 @@ const InputProvider = ({ children }) => {
   const [timer, setTimerType ] = useState("Stopwatch");
   const [workSecs, setWorkSecs ] = useState("");
   const [restSecs, setRestSecs ] = useState("");
-  const [rounds, setRounds ] = useState(0);
+  const [rounds, setRounds ] = useState(1);
 
   const [totalTime, setTotalTime] = useState(0);
+
+  const [btnClicked, setBtnClicked] = useState("");
 
   
   const timers = [
     {
       type: 'XY',
       rounds: 3, 
-      workSeconds: 90, 
+      workSeconds: 10, 
     }, 
     {
       type: 'Stopwatch', 
@@ -42,7 +44,6 @@ const InputProvider = ({ children }) => {
   
   async function addTimer(timer){
     timers.push(timer);
-    setRunning(true);
     setNewConfigs(true);
     calculateTotal(timer); 
     return null;
@@ -71,7 +72,12 @@ const InputProvider = ({ children }) => {
   }; 
   
   
-    
+  useEffect(() => {
+    if (btnClicked === "Start") {
+      setRunning(true);
+
+    }
+  })
   
   return (
     <InputContext.Provider value={{
@@ -85,7 +91,7 @@ const InputProvider = ({ children }) => {
            restSecs, setRestSecs, 
            rounds, setRounds, 
 
-           totalTime
+           totalTime, setBtnClicked, btnClicked
             
         }}>
         

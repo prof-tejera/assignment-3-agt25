@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import styled from "styled-components";
 import { AppContext } from '../context/AppProvider';
 import { InputContext } from "../context/InputProvider";
@@ -209,8 +209,8 @@ const AddWorkoutView = ()  => {
   
   const { setNewVisit, timer, setTimerType, workSecs, setWorkSecs, rounds, setRounds, restSecs, setRestSecs } = React.useContext(InputContext);
 
-  const { addTimer, timers } = React.useContext(InputContext);
-  const { queue, setQueue, setRunning, setNewConfigs } = React.useContext(AppContext);
+  const { addTimer, timers, setBtnClicked } = React.useContext(InputContext);
+  const { queue, setQueue, setRunning, running } = React.useContext(AppContext);
 
   let btnClicked = null;
   
@@ -230,18 +230,25 @@ const AddWorkoutView = ()  => {
       if (btnClicked === "Start") {
         // Take the user home 
         setRunning(true);
-        setNewConfigs(true);
-        navigate(`/`);
+        setBtnClicked("Start")
+        
       } else if (btnClicked === "Add") {
         // Allow the user to keep adding other timers
+        setBtnClicked("Add");
         setTimerType("Stopwatch");
         setWorkSecs("");
         setRestSecs("");
         setRounds("");
-        
+       
       }
     });
   }; 
+
+  useEffect(() => {
+    if (running && queue) {
+      navigate(`/`);
+    }
+  }, [running, queue])
 
   const checkTimeInput = (e) => {
     let id = e.target.id;

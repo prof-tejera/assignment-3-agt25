@@ -41,7 +41,7 @@ const ResetBtn = styled(Button)`
 
 const Timer = () => {
   
-  const { queue } = React.useContext(AppContext);
+  const { queue, paused, setPaused } = React.useContext(AppContext);
 
   
   
@@ -73,8 +73,8 @@ const Timer = () => {
                   
                   {/* Pause, New, or Start button */}
                     <ActionButton 
-                                  type={"Orange"}
-                                  onClick={(e) => console.log(e)}> 
+                                  type={paused ? "Start" : "Pause"}
+                                  onClick={(e) => console.log('Pause')}> 
                                   Pause
                     </ActionButton>
                 </ButtonsContainer>
