@@ -207,10 +207,17 @@ align-content: normal;
 const AddWorkoutView = ()  => {
 
   
-  const { setNewVisit, timer, setTimerType, workSecs, setWorkSecs, rounds, setRounds, restSecs, setRestSecs } = React.useContext(InputContext);
+  const { setNewVisit, 
+          timer, setTimerType, 
+          workSecs, setWorkSecs, 
+          rounds, setRounds, 
+          restSecs, setRestSecs, 
+          addTimer, 
+          setBtnClicked } = React.useContext(InputContext);
 
-  const { addTimer, timers, setBtnClicked } = React.useContext(InputContext);
-  const { queue, setQueue, setRunning, running } = React.useContext(AppContext);
+  const { queue, setQueue, setRunning, running, setPaused } = React.useContext(AppContext);
+
+
 
   let btnClicked = null;
   
@@ -226,19 +233,21 @@ const AddWorkoutView = ()  => {
       setQueue(oldQueue);
       setNewVisit(false);
 
+      setTimerType("Stopwatch");
+      setWorkSecs("");
+      setRestSecs("");
+      setRounds("");
       
       if (btnClicked === "Start") {
         // Take the user home 
         setRunning(true);
-        setBtnClicked("Start")
+        setBtnClicked("Start"); 
+        setPaused(false);
         
       } else if (btnClicked === "Add") {
         // Allow the user to keep adding other timers
         setBtnClicked("Add");
-        setTimerType("Stopwatch");
-        setWorkSecs("");
-        setRestSecs("");
-        setRounds("");
+        
        
       }
     });
@@ -246,6 +255,7 @@ const AddWorkoutView = ()  => {
 
   useEffect(() => {
     if (running && queue) {
+      setPaused(false);
       navigate(`/`);
     }
   }, [running, queue])
@@ -320,7 +330,7 @@ const AddWorkoutView = ()  => {
     <div>
       
       <Label>Select Timer</Label> 
-      <CustomSelect name="timerType" onChange={(e) => setTimerType(e.target.value)}>
+      <CustomSelect name="timerType" value={timer} onChange={(e) => setTimerType(e.target.value)}>
           <option default value="Stopwatch">Stopwatch</option>
           <option value="Countdown">Countdown</option>
           <option value="XY">XY</option>

@@ -4,6 +4,7 @@ import { formatTime } from "../utils/helpers";
 import { AppContext } from '../context/AppProvider';
 import { InputContext } from "../context/InputProvider";
 import { BrowserRouter as Router, Routes, Route, Link, useParams, useNavigate } from 'react-router-dom';
+import Button from "../components/generic/Button";
 
 
 // Timers npm 
@@ -145,7 +146,23 @@ const QueueWrapper = styled.div`
   
 border: 2px dotted white;
 border-radius: 300px 300px 0px 0px;
-margin-top: 1rem;
+margin: 4rem 0 2rem 0;
+
+`;
+
+const AddMoreBtn = styled(StartButton)`
+  padding: 1rem;
+  font-size: 27px;
+  width: 95px;
+  height: 95px;
+  border-radius: 50%;
+  color: goldenrod !important;
+  border: 3px dotted #7299E9;
+  position: relative;
+  top: -25px;
+  
+
+
 
 `;
 
@@ -154,10 +171,16 @@ const TimersView = ()  => {
   
   const { newVisit, setNewVisit, homePage, setHomePage } = React.useContext(InputContext);
   const { timers } = React.useContext(InputContext);
-  const { queue, archiveTimer, removeTimer, history, isReady, running } = React.useContext(AppContext);
+  const { queue, archiveTimer, removeTimer, isReady, running, setPaused, setRunning } = React.useContext(AppContext);
   let navigate = useNavigate();
+  
+
+
+
    
   const addWorkout = () => {
+    setHomePage(false);
+    setNewVisit(false);
     navigate(`/add`);
   }; 
 
@@ -179,8 +202,7 @@ const TimersView = ()  => {
             </ul>
 
             <StartButton onClick={(e) => {
-              setHomePage(false);
-              setNewVisit(false);
+              
               addWorkout();
               }}>
               <StyledLink to='/add'>
@@ -194,27 +216,23 @@ const TimersView = ()  => {
 
 
     {!newVisit && 
-           <div>
+        <div>
             {queue.length > 0 && 
             <WorkoutSummary> 
                 <SmallerTitle>Timers</SmallerTitle>
-             <div>
+            <div>
     
               <SummaryLabels>Workout 0/10</SummaryLabels>
               <SummaryLabels>Current XY</SummaryLabels>
               <SummaryLabels>Next Stopwatch</SummaryLabels>
 
-             </div>
+            </div>
 
-             
-              
             </WorkoutSummary>
-        }
-        <Timer/>
+            }
+            <Timer/>
         </div>
       
-      
-    
     
     }
 
@@ -222,6 +240,16 @@ const TimersView = ()  => {
      {/* If there's timers already configured, show the active queue */}
      {queue.length > 0 && !newVisit &&
         <QueueWrapper>
+          <AddMoreBtn onClick={(e) => {
+            setPaused(true);
+            setRunning(false);
+            navigate("add");
+          }}>
+              <StyledLink to='/add'>
+                Add
+              </StyledLink>
+            </AddMoreBtn>
+           
         <TileIntro>Active Queue</TileIntro>
         <ActiveTiles>
          {queue.map((timer, index) => (
@@ -234,22 +262,6 @@ const TimersView = ()  => {
       <button onClick={(e) => archiveTimer()}>Archive</button>  </QueueWrapper>
     }
 
-
-    {/* If there's timers that are already finished, show the history queue */}
-    {history.length > 0 && !newVisit &&
-      <div> 
-      <TileIntro>Finished</TileIntro>
-      <ActiveTiles>
-         {history.map((timer, index) => (
-                <TimerTile key={index} type={timer.type} index={index}
-                work={timer.workSeconds} rounds={timer.rounds}
-                rest={timer.restSeconds}></TimerTile>
-  
-              )   
-          )}
-      </ActiveTiles>
-      </div>
-    }
     
     </>
   );
