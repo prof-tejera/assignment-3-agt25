@@ -63,7 +63,6 @@ const TimerTitle = styled.h1`
 const SmallerTitle = styled(TimerTitle)`
   font-size: 55px;
   
-
 `;
 
 const StyledLink = styled(Link)`
@@ -171,7 +170,7 @@ const TimersView = ()  => {
   
   const { newVisit, setNewVisit, homePage, setHomePage } = React.useContext(InputContext);
   const { timers } = React.useContext(InputContext);
-  const { queue, archiveTimer, removeTimer, isReady, running, setPaused, setRunning } = React.useContext(AppContext);
+  const { queue, archiveTimer, removeTimer, isReady, running, setPaused, setRunning, currTimer } = React.useContext(AppContext);
   let navigate = useNavigate();
   
 

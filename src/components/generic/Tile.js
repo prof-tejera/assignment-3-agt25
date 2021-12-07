@@ -3,6 +3,7 @@ import styled from "styled-components";
 import {Container, Row, Col} from "react-bootstrap";
 import {BookmarkXFill } from "react-bootstrap-icons";
 import { formatTime } from "../../utils/helpers";
+import { AppContext } from '../../context/AppProvider';
 
 const timerThemes = {
   Stopwatch: "#AAD2E9", 
@@ -25,6 +26,7 @@ const TileWrapper = styled.div`
   height: 150px;
   color: white;
   margin: 1rem;
+  border: ${(props) => props.index === props.current ? '2px solid yellow' : 'none'};
 `;
 
 const Title = styled.h3`
@@ -71,11 +73,13 @@ const TimerNumber = styled(Col)`
 
 const TimerTile = (props) => {
     const { type, work, rounds, rest, index } = props; 
-  
+    const {currTimer } = React.useContext(AppContext)
+    
+
     return (
       <>
       
-          <TileWrapper>
+          <TileWrapper index={index} current={currTimer}>
             <Icon size={40} color="red"/>
             <Title color={type}>{type}</Title>
             <StatsWrapper>

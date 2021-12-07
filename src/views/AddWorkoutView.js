@@ -249,7 +249,7 @@ const AddWorkoutView = ()  => {
       if (btnClicked === "Start") {
         // Take the user home 
         setRunning(true);
-        setBtnClicked("Start"); 
+        
         setPaused(false);
         
       } else if (btnClicked === "Add") {
@@ -264,9 +264,12 @@ const AddWorkoutView = ()  => {
     if (running && queue) {
       setPaused(false);
       navigate(`/`);
+      setNewVisit(false);
+      
     }
   }, [running, queue])
-
+  
+  
   
 
   const checkTimeInput = (e) => {
@@ -394,7 +397,8 @@ const AddWorkoutView = ()  => {
       <AddStartBtn type="submit" onClick={(e) => btnClicked = "Start"}> Add and Start</AddStartBtn>
     </BtnsWrapper>
 
-      <HomeBtn onClick={() => navigate("/")}>Home</HomeBtn>
+
+      <HomeBtn onClick={() => setRunning(true)}>Home</HomeBtn>
      
       </Form>
       </Container>
