@@ -145,7 +145,7 @@ const CircleWrapper = styled.div`
 const TimersScreen = () => {
 
   const {   queue,
-            actionHelper, running, paused,
+            actionHelper, running, paused, finished,
             currRound, 
             currAction, currTime, currTimer } = React.useContext(AppContext);
 
@@ -181,10 +181,10 @@ const TimersScreen = () => {
                             {currAction === "Rest" && running && !paused 
                                 && <img src={RestingIcon} alt="Standing Stick Figure"/>}
 
-                            {currAction === "Congrats" && !paused 
+                            {currAction === "Congrats" && finished
                                 && <img src={CongratsIcon} alt="Standing Stick Figure"/>}
 
-                            {paused && <img src={PlayIcon} alt="Standing Stick Figure"/>}
+                            {paused && !finished && <img src={PlayIcon} alt="Standing Stick Figure"/>}
 
                             </ActionsCircle>
                         </CircleWrapper>

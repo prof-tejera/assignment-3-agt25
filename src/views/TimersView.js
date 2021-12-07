@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { AppContext } from '../context/AppProvider';
 import { InputContext } from "../context/InputProvider";
-import { BrowserRouter as Router, Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 
 

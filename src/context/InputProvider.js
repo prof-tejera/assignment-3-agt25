@@ -5,7 +5,7 @@ export const InputContext = React.createContext({});
 
 const InputProvider = ({ children }) => {
 
-  const { setNewConfigs, setRunning } = React.useContext(AppContext);
+  const { setNewConfigs, setRunning, setFinished } = React.useContext(AppContext);
 
  
   const [homePage, setHomePage ] = useState(true);
@@ -29,6 +29,7 @@ const InputProvider = ({ children }) => {
   async function addTimer(timer){
     timers.push(timer);
     setNewConfigs(true);
+    setFinished(false);
     calculateTotal(timer); 
     return null;
   }; 

@@ -41,7 +41,7 @@ const ResetBtn = styled(Button)`
 
 const Timer = () => {
   
-  const { queue, paused, setPaused } = React.useContext(AppContext);
+  const { queue, paused, setPaused, finished, resetTimer, skipTimer } = React.useContext(AppContext);
 
 
   const handleActionBtn = (e) => {
@@ -73,18 +73,19 @@ const Timer = () => {
                     <Button outline="2px solid #302F2F" 
                                     outlineOffset="2px"
                                     disabled={false}
-                                    onClick={(e) => console.log(e)}>
+                                    onClick={skipTimer}>
                                     Skip
                     </Button>
 
                   {/* Reset button */}
-                  <ResetBtn onClick={(e) => console.log('Reset')}>
+                  <ResetBtn onClick={resetTimer}>
                     Reset
                   </ResetBtn>
                   
                   {/* Pause, New, or Start button */}
                     <ActionButton 
                                   type={paused ? "Start" : "Pause"}
+                                  disabled={finished}
                                   onClick={(e) => handleActionBtn(e)}> 
                                   {paused ? "Start" : "Pause"}
                     </ActionButton>

@@ -2,7 +2,7 @@ import React, {useEffect} from "react";
 import styled from "styled-components";
 import { AppContext } from '../context/AppProvider';
 import { InputContext } from "../context/InputProvider";
-import { BrowserRouter as Router, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import TimerTile from "../components/generic/Tile";
 
 const Container = styled.div`
@@ -246,7 +246,7 @@ const AddWorkoutView = ()  => {
       setNewVisit(false);
       
     } 
-  }, [running, queue, paused])
+  }, [running, queue, paused, setNewVisit])
 
 
 

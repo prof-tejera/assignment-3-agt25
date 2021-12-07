@@ -1,6 +1,12 @@
 import React, {useEffect, useState, useCallback} from 'react';
 import {InputContext} from './InputProvider';
 
+// Sound and visual effects 
+import confetti from "canvas-confetti"; 
+import useSound from 'use-sound';
+import roundChangeSound from '../sounds/round-change.wav';
+import congratsSound from "../sounds/congrats.wav";
+
 
 
 export const AppContext = React.createContext({});
@@ -42,6 +48,11 @@ const AppProvider = ({children}) => {
 
     const [currTimer, setCurrTimer ] = React.useState(0);
 
+    const [workoutEnd, setWorkoutEnd] = React.useState(false);
+    const [playNewRound] = useSound(roundChangeSound);
+    const [playCongratsSound] = useSound(congratsSound);
+
+    
   
     
 
@@ -52,11 +63,43 @@ const AppProvider = ({children}) => {
          setFinished(false);
        } else {
          setFinished(true);
+         setCurrAction("Congrats");
+         setPaused(true);
+         
+         
        }; 
       
-    }, [finished, currTimer])
+    }, [currTimer, queue])
+
+
+    const endCurrTimer = () => {
+      console.log('vfdyyg')
+    }
 
     
+    const skipTimer = useCallback(() => {
+     
+      if (currTimer + 1 < queue.length) {
+        setCurrTimer(currTimer + 1); 
+      } else {
+        let curr = queue[currTimer]; 
+        if (curr.type === "Stopwatch") {
+          console.log(`fhduhd${curr.workSeconds}`);
+          setCurrTime(curr.workSeconds);
+        }
+        setFinished(true);
+      }
+      
+    }, [queue, currTimer]); 
+
+
+
+    const resetTimer = () => {
+      console.log('Reset');
+      setCurrTimer(0);
+      setFinished(false);
+      setPaused(false);
+    }; 
     
     
     useEffect(() => {
@@ -65,18 +108,10 @@ const AppProvider = ({children}) => {
       if (finished) {
         archiveTimer(); 
       }
-    }, [finished])
+    })
 
 
-    useEffect(() => {
-      if (queue) {
-        if (queue.length > currTimer && finished) {
-          setFinished(false);
-          setCurrTimer(currTimer + 1);
-        }
-      }
-      
-    }, [queue])
+    
 
 
     const countDown = useCallback(() => {
@@ -118,7 +153,7 @@ const AppProvider = ({children}) => {
             setCurrTime(currTime - 1);
         };
 
-    }, [currAction, currTime, currRound, queue, paused, finished]);
+    }, [currAction, currTime, currRound, queue, paused, finished, currTimer]);
 
 
 
@@ -145,7 +180,7 @@ const AppProvider = ({children}) => {
             setFinished(true);
         }
 
-    }, [currAction, currTime, queue, paused, finished]);
+    }, [currTime, queue, paused, finished, currTimer]);
 
 
 
@@ -163,7 +198,7 @@ const AppProvider = ({children}) => {
          * Listens for action changes (rest, work); 
          * Switches the ative currTime conditionally;
          *****************************************************************/
-        if (queue && running) {
+        if (queue && running && !finished) {
           if (queue[currTimer].type === "XY" || queue[currTimer].type === "Tabata") {
               if (currAction === "Work") {
                   setCurrTime(queue[currTimer].workSeconds);
@@ -180,7 +215,7 @@ const AppProvider = ({children}) => {
           };
           setIsTimerReady(true);
         }
-      }, [currAction, queue, running, isTimerReady, currTimer])
+      }, [currAction, queue, running, isTimerReady, currTimer, finished])
   
 
     useEffect(() => {
@@ -209,7 +244,7 @@ const AppProvider = ({children}) => {
       // Clear interval when app unmounts
       return() => clearInterval(intervalId);
 
-  }, [running, countDown, countUp, queue, isTimerReady])
+  }, [running, countDown, countUp, queue, isTimerReady, currTimer])
 
 
     
@@ -258,7 +293,7 @@ const AppProvider = ({children}) => {
         if (id + 1 <= queue.length) {
           setCurrTimer(currTimer);
         } else {
-          setCurrTimer(currTimer - 1);
+          setCurrTimer(currTimer);
         };
       };
       
@@ -296,9 +331,12 @@ const AppProvider = ({children}) => {
                 currTime, 
                 setCurrTime, 
                 finished,
+                setFinished,
 
-                currTimer
-                
+                currTimer,
+                workoutEnd,
+                resetTimer,
+                skipTimer
             }}>
             {children}
         </AppContext.Provider>

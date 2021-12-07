@@ -111,7 +111,7 @@ const Device = ({...props}) => {
    
 
     const { queue, currAction, currRound, running, currTimer } = React.useContext(AppContext);
-    const {totalTime } = React.useContext(InputContext)
+    const { totalTime } = React.useContext(InputContext)
 
 
     const workTime = queue[currTimer].workSeconds; 
