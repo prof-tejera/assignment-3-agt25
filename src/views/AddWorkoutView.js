@@ -178,7 +178,7 @@ const AddBtn = styled.button`
 `;
 
 
-const HomeBtn = styled.button`
+const HomeBtn = styled.div`
   height: 60px;
   font-size: 18px;
   background-color: transparent;
@@ -215,7 +215,7 @@ const AddWorkoutView = ()  => {
           addTimer, 
           setBtnClicked } = React.useContext(InputContext);
 
-  const { queue, setQueue, setRunning, running, setPaused } = React.useContext(AppContext);
+  const { queue, setQueue, setRunning, running, setPaused, paused, removeTimer } = React.useContext(AppContext);
 
 
 
@@ -243,34 +243,44 @@ const AddWorkoutView = ()  => {
       setWorkSecs("");
       setRestSecs("");
       setRounds("");
-
+      setRunning(true);
       
       
       if (btnClicked === "Start") {
         // Take the user home 
-        setRunning(true);
-        
+        setBtnClicked("Start");
         setPaused(false);
-        
+        navigate("/");
       } else if (btnClicked === "Add") {
         // Allow the user to keep adding other timers
         setBtnClicked("Add");
-        
+        setPaused(true);
       }
     });
   }; 
 
   useEffect(() => {
-    if (running && queue) {
-      setPaused(false);
-      navigate(`/`);
+    // Effect for add 
+    if (running && !paused && queue ) {
       setNewVisit(false);
       
-    }
-  }, [running, queue])
+    } 
+  }, [running, queue, paused])
+
+
+
   
   
-  
+  const handleHome = (e) => {
+    if (queue.length > 0) {
+      setRunning(true); 
+    } else {
+      setRunning(false);
+      setNewVisit(true);
+      navigate("/");
+    };
+    navigate("/")
+  }
 
   const checkTimeInput = (e) => {
     let id = e.target.id;
@@ -398,7 +408,7 @@ const AddWorkoutView = ()  => {
     </BtnsWrapper>
 
 
-      <HomeBtn onClick={() => setRunning(true)}>Home</HomeBtn>
+      <HomeBtn onClick={handleHome}>Home</HomeBtn>
      
       </Form>
       </Container>

@@ -4,6 +4,8 @@ import {Container, Row, Col} from "react-bootstrap";
 import {BookmarkXFill } from "react-bootstrap-icons";
 import { formatTime } from "../../utils/helpers";
 import { AppContext } from '../../context/AppProvider';
+import { InputContext } from '../../context/InputProvider';
+
 
 const timerThemes = {
   Stopwatch: "#AAD2E9", 
@@ -73,14 +75,18 @@ const TimerNumber = styled(Col)`
 
 const TimerTile = (props) => {
     const { type, work, rounds, rest, index } = props; 
-    const {currTimer } = React.useContext(AppContext)
+    const {currTimer, removeTimer, paused } = React.useContext(AppContext);
+    const { homePage } = React.useContext(InputContext);
     
 
     return (
       <>
       
           <TileWrapper index={index} current={currTimer}>
-            <Icon size={40} color="red"/>
+            {paused &&  
+              <Icon size={40} color="red" onClick={(e) => removeTimer(index)}/> 
+            }
+            
             <Title color={type}>{type}</Title>
             <StatsWrapper>
               {/******************************

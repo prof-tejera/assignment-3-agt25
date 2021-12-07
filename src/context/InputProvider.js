@@ -5,7 +5,7 @@ export const InputContext = React.createContext({});
 
 const InputProvider = ({ children }) => {
 
-  const { setNewConfigs, queue, setQueue, setRunning } = React.useContext(AppContext);
+  const { running, setNewConfigs, queue, setQueue, setRunning } = React.useContext(AppContext);
 
  
   const [homePage, setHomePage ] = useState(true);
@@ -35,24 +35,23 @@ const InputProvider = ({ children }) => {
 
 
   const calculateTotal = (timer) => {
-    let totalTime; 
+    let newTotal; 
 
     let type = timer.type; 
-    let work = timer.workSeconds;
-    let rounds = timer.rounds;
-    let rest = timer.restSeconds
+    let work = parseInt(timer.workSeconds);
+    let rounds = parseInt(timer.rounds);
+    let rest = parseInt(timer.restSeconds);
 
     if (type === "XY") {
-      totalTime = work * rounds; 
+      newTotal = work * rounds; 
     } else if (type === "Tabata") {
       let compTimes = work + rest; 
-      totalTime = compTimes * rounds; 
+      newTotal = compTimes * rounds; 
     } else {
-      totalTime = work; 
+      newTotal = work; 
     }; 
 
-    setTotalTime(totalTime);
-    
+    setTotalTime(newTotal + totalTime);
   }; 
   
   
@@ -60,8 +59,13 @@ const InputProvider = ({ children }) => {
     if (btnClicked === "Start") {
       setRunning(true);
 
+
     }
   })
+
+  
+
+  
   
   return (
     <InputContext.Provider value={{

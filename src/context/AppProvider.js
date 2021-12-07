@@ -13,7 +13,7 @@ export const AppContext = React.createContext({});
 const AppProvider = ({children}) => {
 
     // Import target rounds, run time, rest time from InputContext
-    const { timers, btnClicked } = React.useContext(InputContext);
+    const { timers, btnClicked, totalTime, setNewVisit } = React.useContext(InputContext);
 
     // Document and fonts state
     const [isReady, setIsReady] = useState(false);
@@ -29,7 +29,6 @@ const AppProvider = ({children}) => {
 
     const [currRound, setCurrRound] = React.useState(1);
 
-    const [totalElapsed, setTotalElapsed] = React.useState(0);
 
     const [currElapsed, setCurrElapsed] = React.useState(0);
 
@@ -37,17 +36,19 @@ const AppProvider = ({children}) => {
 
     const [currTime, setCurrTime] = React.useState(0);
 
-    const archived = [];
-
-    const [history, setHistory] = React.useState(archived);
+    
+    // on skip, add the total timers in the queue
+    // curr Elapsed should be added to the total so far ? 
+    // and it should be added to the totalElapsed once the timer is finished
+    // and set to 0. 
+    
 
     const [isTimerReady, setIsTimerReady ] = React.useState(false);
 
     const [currTimer, setCurrTimer ] = React.useState(0);
 
-    
-    
-
+  
+    // USED AS A SCHEMA
     const initialTimers = [
         {
             type: 'XY',
@@ -85,10 +86,20 @@ const AppProvider = ({children}) => {
     useEffect(() => {
       if (finished) {
         archiveTimer(); 
-
       }
 
     }, [finished])
+
+
+    useEffect(() => {
+      if (queue) {
+        if (queue.length > currTimer && finished) {
+          setFinished(false);
+          setCurrTimer(currTimer + 1);
+        }
+      }
+      
+    }, [queue])
 
 
     const countDown = useCallback(() => {
@@ -134,15 +145,7 @@ const AppProvider = ({children}) => {
 
 
 
-    // Populates the appropriate run / rest values when the currAction changes
-    useEffect(() => {
-        if (running && queue) {
-          let timerType = queue[currTimer].type;
-          console.log(timerType);
-          
-        }
-    }, [currAction, queue, running, currTimer])
-
+  
 
 
     
@@ -192,10 +195,10 @@ const AppProvider = ({children}) => {
             // Stopwatch starts at 0 
             setCurrAction("Work"); 
             setCurrTime(0);
-          } else {
+          } else if (queue[currTimer].type === "Countdown") {
             setCurrTime(queue[currTimer].workSeconds);
             setCurrAction("Work");
-          }; 
+          };
           setIsTimerReady(true);
         }
       }, [currAction, queue, running, isTimerReady, currTimer])
@@ -236,10 +239,55 @@ const AppProvider = ({children}) => {
 
 
     async function removeTimer(id) {
+      /*********************************************************
+       * Removes the intended timer from the queue after 
+       * conditionally updating the currTimer's state. 
+       **********************************************************/
 
-        // Assuming we don't remove it from the configs
-        let filteredQueue = queue.filter((_, index) => index !== id);
-        setQueue(filteredQueue);
+
+      if (id === 0) {
+        /*******************************************
+        * Handle deletion of timer 0 
+        * *****************************************/ 
+        if (currTimer === 0) {
+          if (queue.length > 1) {
+            /* If 0 is the current timer, and there's one next to it, 
+            set it back to 0 */ 
+            setCurrTimer(0);
+          } else {
+            // If there's no other timers, delete 0 and reset the app
+            setNewVisit(true);
+            setRunning(false);
+          };
+        } else {
+          setCurrTimer(currTimer - 1);
+        };
+      } else if (id === currTimer) {
+       /*******************************************
+       * Handle deletion of the current Timer 
+       * *****************************************/ 
+        if (currTimer + 1 < queue.length) {
+           // If it's not the last timer, keep the previous index 
+          setCurrTimer(currTimer);
+        } else {
+          // Else, go back an index 
+          setCurrTimer(currTimer - 1);
+        };
+      } else {
+        /*******************************************
+       * Handle deletion of non-active timers
+       * *****************************************/ 
+        if (id + 1 <= queue.length) {
+          setCurrTimer(currTimer);
+        } else {
+          setCurrTimer(currTimer - 1);
+        };
+      };
+      
+
+      // Delete the intended timer and set the update queue to state
+      let filteredQueue = queue.filter((_, index) => index !== id);
+      setQueue(filteredQueue);
 
     };
 
@@ -257,7 +305,6 @@ const AppProvider = ({children}) => {
                 setQueue,
                 newConfigs,
                 setNewConfigs,
-                history,
                 paused,
                 setPaused,
                 running,

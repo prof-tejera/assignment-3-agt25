@@ -185,9 +185,9 @@ const TimersView = ()  => {
 
   return (
       <>
-     
+
       {/* The first home page presented to the users */}
-      {newVisit && isReady &&
+      {newVisit || queue.length === 0 ?
   
       <Container>
           <Intro>
@@ -201,7 +201,6 @@ const TimersView = ()  => {
             </ul>
 
             <StartButton onClick={(e) => {
-              
               addWorkout();
               }}>
               <StyledLink to='/add'>
@@ -209,14 +208,14 @@ const TimersView = ()  => {
               </StyledLink>
             </StartButton>
           </Intro>
-    </Container>
+    </Container> : null
     }
      
 
 
-    {!newVisit && 
+    {!newVisit && queue.length > 0 &&
         <div>
-            {queue.length > 0 && 
+           
             <WorkoutSummary> 
                 <SmallerTitle>Timers</SmallerTitle>
             <div>
@@ -228,7 +227,7 @@ const TimersView = ()  => {
             </div>
 
             </WorkoutSummary>
-            }
+            
             <Timer/>
         </div>
       
