@@ -1,8 +1,8 @@
-import React, {useState, useEffect} from "react";
+import React, {useEffect} from "react";
 import styled from "styled-components";
 import { AppContext } from '../context/AppProvider';
 import { InputContext } from "../context/InputProvider";
-import { BrowserRouter as Router, Routes, Route, Link, useParams, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, useNavigate } from 'react-router-dom';
 import TimerTile from "../components/generic/Tile";
 
 const Container = styled.div`
@@ -90,17 +90,6 @@ background-repeat: no-repeat;
 }
 `;
 
-const FormHelper = styled.button`
-
-  display: inline-flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: space-between;
-  align-items: flex-start;
-  align-content: space-between;
-
-`;
-
 
 const Label = styled.div`
   float: left;
@@ -133,15 +122,7 @@ border-bottom: 1px dotted white;
 `;
 
 
-const FormInstructons = styled.div`
-  display: inline-flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: space-between;
-  align-items: flex-start;
-  align-content: space-between;
 
-`;
 
 const AddStartBtn = styled.button`
   background-color: #3bb78f;
@@ -215,7 +196,7 @@ const AddWorkoutView = ()  => {
           addTimer, 
           setBtnClicked } = React.useContext(InputContext);
 
-  const { queue, setQueue, setRunning, running, setPaused, paused, removeTimer } = React.useContext(AppContext);
+  const { queue, setQueue, setRunning, running, setPaused, paused } = React.useContext(AppContext);
 
 
 

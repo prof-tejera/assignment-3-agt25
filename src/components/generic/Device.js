@@ -10,20 +10,6 @@ const sizeMapping = {
     height: 580,
 };
 
-const ExteriorWrapper = styled.div`
-    width: ${(props) => props.width + 0}px;
-    height: ${(props) => props.height + 0}px;
-    border: 1px solid red;
-    display: flex;
-    flex-direction: row;
-    wrap-direction: nowrap;
-    justify-content: center;
-    align-items: center;
-    color: #458FEB;
-    border: 1px solid grey;
-    border-radius: 45px;
-
-`; 
 
 const ScreenWrapper = styled.div`
   display: flex;

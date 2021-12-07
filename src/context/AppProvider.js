@@ -1,19 +1,14 @@
 import React, {useEffect, useState, useCallback} from 'react';
 import {InputContext} from './InputProvider';
-import {timeInSeconds, alertCountUp, alertCountDown} from '../utils/helpers';
 
-// Sound and visual effects
-import confetti from "canvas-confetti";
-import useSound from 'use-sound';
-import roundChangeSound from '../sounds/round-change.wav';
-import congratsSound from "../sounds/congrats.wav";
+
 
 export const AppContext = React.createContext({});
 
 const AppProvider = ({children}) => {
 
     // Import target rounds, run time, rest time from InputContext
-    const { timers, btnClicked, totalTime, setNewVisit } = React.useContext(InputContext);
+    const { timers, totalTime, setNewVisit } = React.useContext(InputContext);
 
     // Document and fonts state
     const [isReady, setIsReady] = useState(false);
@@ -48,25 +43,7 @@ const AppProvider = ({children}) => {
     const [currTimer, setCurrTimer ] = React.useState(0);
 
   
-    // USED AS A SCHEMA
-    const initialTimers = [
-        {
-            type: 'XY',
-            rounds: 3,
-            workSeconds: 90
-        }, {
-            type: 'Stopwatch',
-            workSeconds: 120
-        }, {
-            type: 'Tabata',
-            workSeconds: 120,
-            rounds: 8,
-            restSeconds: 110
-        }, {
-            type: 'Countdown',
-            workSeconds: 180
-        }
-    ];
+    
 
     const archiveTimer = useCallback(() => {
       console.log('finished!!!!');
@@ -82,12 +59,12 @@ const AppProvider = ({children}) => {
     
     
     
-
     useEffect(() => {
+      /* Listen for each timer's end;
+        Call the archive method */  
       if (finished) {
         archiveTimer(); 
       }
-
     }, [finished])
 
 
@@ -172,19 +149,21 @@ const AppProvider = ({children}) => {
 
 
 
-    // Effect for FOUT
+    
     useEffect(() => {
-        /************************************************
-        * Checks if the fonts are ready; handles FOUT
-        ***********************************************/
+        /* When the app loads, load the fonts; 
+           gets rid of FOUT */
         document.fonts.ready.then(() => setIsReady(true));
-        
     }, []);
 
-      // Populates the appropriate run / rest values when the currAction changes
+
+    
       useEffect(() => {
+        /*****************************************************************
+         * Listens for action changes (rest, work); 
+         * Switches the ative currTime conditionally;
+         *****************************************************************/
         if (queue && running) {
-          
           if (queue[currTimer].type === "XY" || queue[currTimer].type === "Tabata") {
               if (currAction === "Work") {
                   setCurrTime(queue[currTimer].workSeconds);
@@ -243,7 +222,6 @@ const AppProvider = ({children}) => {
        * Removes the intended timer from the queue after 
        * conditionally updating the currTimer's state. 
        **********************************************************/
-
 
       if (id === 0) {
         /*******************************************

@@ -1,10 +1,10 @@
 import React from "react";
 import styled from "styled-components";
-import {Container, Row, Col} from "react-bootstrap";
+import { Col } from "react-bootstrap";
 import {BookmarkXFill } from "react-bootstrap-icons";
 import { formatTime } from "../../utils/helpers";
 import { AppContext } from '../../context/AppProvider';
-import { InputContext } from '../../context/InputProvider';
+
 
 
 const timerThemes = {
@@ -76,7 +76,7 @@ const TimerNumber = styled(Col)`
 const TimerTile = (props) => {
     const { type, work, rounds, rest, index } = props; 
     const {currTimer, removeTimer, paused } = React.useContext(AppContext);
-    const { homePage } = React.useContext(InputContext);
+ 
     
 
     return (

@@ -1,11 +1,11 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AppContext } from './AppProvider';
 
 export const InputContext = React.createContext({});
 
 const InputProvider = ({ children }) => {
 
-  const { running, setNewConfigs, queue, setQueue, setRunning } = React.useContext(AppContext);
+  const { setNewConfigs, setRunning } = React.useContext(AppContext);
 
  
   const [homePage, setHomePage ] = useState(true);

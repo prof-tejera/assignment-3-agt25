@@ -1,17 +1,12 @@
 import React from "react";
 import styled from "styled-components";
-import { formatTime } from "../utils/helpers";
 import { AppContext } from '../context/AppProvider';
 import { InputContext } from "../context/InputProvider";
-import { BrowserRouter as Router, Routes, Route, Link, useParams, useNavigate } from 'react-router-dom';
-import Button from "../components/generic/Button";
+import { BrowserRouter as Router, Link, useNavigate } from 'react-router-dom';
 
 
-// Timers npm 
-import Stopwatch from "../components/timers/Stopwatch";
-import Countdown from "../components/timers/Countdown";
-import XY from "../components/timers/XY";
-import Tabata from "../components/timers/Tabata";
+
+
 import TimerTile from "../components/generic/Tile";
 import Timer from "../components/generic/Timer";
 
@@ -101,15 +96,7 @@ const TileIntro = styled.p`
 
 `;
 
-const TileContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: normal;
-  align-content: normal;
-  margin: 3rem;
-`;
+
 
 const WorkoutSummary = styled.div`
  
@@ -134,13 +121,7 @@ const SummaryLabels = styled.span`
 
 `;
 
-const SummaryStats = styled.div`
-  text-align: left;
-  padding: 0 0.5rem;
-  color: #90693A;
-  
 
-`;
 
 const QueueWrapper = styled.div`
   
@@ -168,9 +149,8 @@ const AddMoreBtn = styled(StartButton)`
 const TimersView = ()  => {
 
   
-  const { newVisit, setNewVisit, homePage, setHomePage } = React.useContext(InputContext);
-  const { timers } = React.useContext(InputContext);
-  const { queue, archiveTimer, removeTimer, isReady, running, setPaused, setRunning, currTimer } = React.useContext(AppContext);
+  const { newVisit, setNewVisit, setHomePage } = React.useContext(InputContext);
+  const { queue, archiveTimer, setPaused, setRunning } = React.useContext(AppContext);
   let navigate = useNavigate();
   
 
