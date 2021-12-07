@@ -28,8 +28,12 @@ const TileWrapper = styled.div`
   height: 150px;
   color: white;
   margin: 1rem;
-  border: ${(props) => props.index === props.current ? '2px solid yellow' : 'none'};
-`;
+  border: ${(props) => props.index === props.current ? '1px solid yellow' : 'none'};
+  -webkit-box-shadow: ${(props) => props.index === props.current ? '5px 5px 7px 9px rgba(255,254,138,0.4)' : 'none'};
+  box-shadow: ${(props) => props.index === props.current ? '5px 5px 7px 9px rgba(255,254,138,0.4)' : 'none'};
+
+
+  `;
 
 const Title = styled.h3`
   margin: -3px;

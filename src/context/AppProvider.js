@@ -14,7 +14,7 @@ export const AppContext = React.createContext({});
 const AppProvider = ({children}) => {
 
     // Import target rounds, run time, rest time from InputContext
-    const { timers, totalTime, setNewVisit } = React.useContext(InputContext);
+    const { timers, totalTime, setNewVisit, setTotalTime } = React.useContext(InputContext);
 
     // Document and fonts state
     const [isReady, setIsReady] = useState(false);
@@ -276,6 +276,8 @@ const AppProvider = ({children}) => {
             // If there's no other timers, delete 0 and reset the app
             setNewVisit(true);
             setRunning(false);
+            setFinished(false);
+            setTotalTime(0);
           };
         } else {
           setCurrTimer(currTimer - 1);
@@ -284,9 +286,9 @@ const AppProvider = ({children}) => {
        /*******************************************
        * Handle deletion of the current Timer 
        * *****************************************/ 
-        if (currTimer + 1 < queue.length) {
+        if (currTimer + 1 <= queue.length) {
            // If it's not the last timer, keep the previous index 
-          setCurrTimer(currTimer);
+          setCurrTimer(currTimer - 1);
         } else {
           // Else, go back an index 
           setCurrTimer(currTimer - 1);
@@ -296,7 +298,8 @@ const AppProvider = ({children}) => {
        * Handle deletion of non-active timers
        * *****************************************/ 
         if (id + 1 <= queue.length) {
-          setCurrTimer(currTimer - 1);
+          console.log('non active, one more there!')
+          setCurrTimer(currTimer);
         } else {
           setCurrTimer(currTimer - 1);
         };

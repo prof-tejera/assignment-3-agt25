@@ -150,7 +150,7 @@ const TimersView = ()  => {
 
   
   const { newVisit, setNewVisit, setHomePage } = React.useContext(InputContext);
-  const { queue, archiveTimer, setPaused, setRunning } = React.useContext(AppContext);
+  const { queue, archiveTimer, setPaused, setRunning, currTimer } = React.useContext(AppContext);
   let navigate = useNavigate();
   
 
@@ -200,9 +200,9 @@ const TimersView = ()  => {
                 <SmallerTitle>Timers</SmallerTitle>
             <div>
     
-              <SummaryLabels>Workout 0/10</SummaryLabels>
-              <SummaryLabels>Current XY</SummaryLabels>
-              <SummaryLabels>Next Stopwatch</SummaryLabels>
+              <SummaryLabels>Workout: {currTimer + 1}/{queue.length}</SummaryLabels>
+              <SummaryLabels>Current: {queue[currTimer].type}</SummaryLabels>
+              <SummaryLabels>Next: {currTimer + 1 < queue.length ? queue[currTimer + 1].type : "End" }</SummaryLabels>
 
             </div>
 
@@ -237,7 +237,7 @@ const TimersView = ()  => {
               )   
           )}
       </ActiveTiles>
-      <button onClick={(e) => archiveTimer()}>Archive</button>  </QueueWrapper>
+      </QueueWrapper>
     }
 
     

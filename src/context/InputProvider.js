@@ -81,6 +81,7 @@ const InputProvider = ({ children }) => {
            rounds, setRounds, 
 
            totalTime, setBtnClicked, btnClicked,
+           setTotalTime
 
           
         }}>
