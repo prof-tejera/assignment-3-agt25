@@ -144,10 +144,7 @@ const CircleWrapper = styled.div`
 
 const TimersScreen = () => {
 
-  const {   queue,
-            actionHelper, running, paused, finished,
-            currRound, 
-            currAction, currTime, currTimer } = React.useContext(AppContext);
+  const { queue, actionHelper, running, paused, finished, currRound, currAction, currTime, currTimer } = React.useContext(AppContext);
 
     
 

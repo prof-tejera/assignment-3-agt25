@@ -33,6 +33,8 @@ const AppProvider = ({children}) => {
 
     const [currElapsed, setCurrElapsed] = React.useState(0);
 
+    const [totalElapsed, setTotalElapsed] = React.useState(0);
+
     const [finished, setFinished] = React.useState(false);
 
     const [currTime, setCurrTime] = React.useState(0);
@@ -61,11 +63,11 @@ const AppProvider = ({children}) => {
        if (currTimer + 1 !== queue.length) {
          setCurrTimer(currTimer + 1);
          setFinished(false);
+         setCurrElapsed(0);
        } else {
          setFinished(true);
          setCurrAction("Congrats");
          setPaused(true);
-         
          
        }; 
       
@@ -78,11 +80,26 @@ const AppProvider = ({children}) => {
 
     
     const skipTimer = useCallback(() => {
-     
+      let curr = queue[currTimer]; 
+      let newElapsed = parseInt(totalElapsed) - parseInt(currElapsed);
       if (currTimer + 1 < queue.length) {
+        if (curr.type === "Stopwatch" || curr.type === "Countdown") {
+          newElapsed += parseInt(curr.workSeconds); 
+        } else if (curr.type === "XY") {
+          let xyTotal = parseInt(curr.workSeconds) * parseInt(curr.rounds);
+          newElapsed += xyTotal;
+        } else if (curr.type === "Tabata") {
+          let tabataTotal = (parseInt(curr.workSeconds) + parseInt(curr.restSeconds));
+          tabataTotal = tabataTotal * parseInt(curr.rounds);
+          newElapsed += tabataTotal; 
+        };
+        // Update the total elapsed time
+        setTotalElapsed(newElapsed);
+
+        // Go to the next timer 
         setCurrTimer(currTimer + 1); 
+        
       } else {
-        let curr = queue[currTimer]; 
         if (curr.type === "Stopwatch") {
           console.log(`fhduhd${curr.workSeconds}`);
           setCurrTime(curr.workSeconds);
@@ -93,9 +110,10 @@ const AppProvider = ({children}) => {
           setCurrTime(0); 
         };
         setFinished(true);
+        setTotalElapsed(totalTime);
       }
       
-    }, [queue, currTimer]); 
+    }, [queue, currTimer, currElapsed, totalElapsed, totalTime]); 
 
 
 
@@ -156,9 +174,11 @@ const AppProvider = ({children}) => {
             }
         } else {
             setCurrTime(currTime - 1);
+            setCurrElapsed(currElapsed + 1);
+            setTotalElapsed(totalElapsed + 1);
         };
 
-    }, [currAction, currTime, currRound, queue, paused, finished, currTimer]);
+    }, [currAction, currTime, currRound, queue, paused, finished, currTimer, currElapsed, totalElapsed]);
 
 
 
@@ -179,13 +199,13 @@ const AppProvider = ({children}) => {
         // Handle the stopwatch hitting the target time values
         if (currTime !== parseInt(queue[currTimer].workSeconds)) {
             setCurrTime(currTime + 1);
-            console.log(queue[currTimer].workSeconds)
-            
+            setCurrElapsed(currElapsed + 1);
+            setTotalElapsed(totalElapsed + 1);
         } else {
             setFinished(true);
-        }
+        };
 
-    }, [currTime, queue, paused, finished, currTimer]);
+    }, [currTime, queue, paused, finished, currTimer, totalElapsed, currElapsed]);
 
 
 
@@ -322,29 +342,24 @@ const AppProvider = ({children}) => {
                 isReady,
                 removeTimer,
                 archiveTimer,
-                queue,
-                setQueue,
-                newConfigs,
-                setNewConfigs,
-                paused,
-                setPaused,
-                running,
-                setRunning,
-
-                currAction,
-                setCurrAction,
-                currRound,
-                setCurrRound, 
+                queue, setQueue,
+                newConfigs, setNewConfigs,
+                paused, setPaused,
+                running, setRunning,
+                currAction, setCurrAction,
+                currRound, setCurrRound, 
 
                 currTime, 
                 setCurrTime, 
                 finished,
                 setFinished,
+                totalElapsed, 
 
                 currTimer,
                 workoutEnd,
                 resetTimer,
-                skipTimer
+                skipTimer, 
+                currElapsed
             }}>
             {children}
         </AppContext.Provider>

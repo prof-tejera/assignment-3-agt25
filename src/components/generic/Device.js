@@ -110,7 +110,7 @@ const Device = ({...props}) => {
 
    
 
-    const { queue, currAction, currRound, running, currTimer } = React.useContext(AppContext);
+    const { queue, currAction, currRound, running, currTimer, totalElapsed } = React.useContext(AppContext);
     const { totalTime } = React.useContext(InputContext)
 
 
@@ -130,7 +130,7 @@ const Device = ({...props}) => {
            
                 {props.children}
                 <BottomStats>
-                    <div> <ElapsedTime>00:00 </ElapsedTime>
+                    <div> <ElapsedTime>{formatTime(totalElapsed)}</ElapsedTime>
                         <div>Elapsed</div>
                     </div>
                     <div> <TotalTime> {formatTime(totalTime)} </TotalTime>
