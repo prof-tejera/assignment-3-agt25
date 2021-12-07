@@ -86,7 +86,12 @@ const AppProvider = ({children}) => {
         if (curr.type === "Stopwatch") {
           console.log(`fhduhd${curr.workSeconds}`);
           setCurrTime(curr.workSeconds);
-        }
+        } else {
+          if (curr.type === "XY" || curr.type === "Tabata") {
+            setCurrRound(curr.rounds);
+          }; 
+          setCurrTime(0); 
+        };
         setFinished(true);
       }
       
@@ -291,9 +296,9 @@ const AppProvider = ({children}) => {
        * Handle deletion of non-active timers
        * *****************************************/ 
         if (id + 1 <= queue.length) {
-          setCurrTimer(currTimer);
+          setCurrTimer(currTimer - 1);
         } else {
-          setCurrTimer(currTimer);
+          setCurrTimer(currTimer - 1);
         };
       };
       
