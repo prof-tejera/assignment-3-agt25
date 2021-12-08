@@ -43,6 +43,10 @@ const AppProvider = ({children}) => {
     const [playNewRound] = useSound(roundChangeSound);
     const [playCongratsSound] = useSound(congratsSound);
 
+    // Keeps track of when the timer changes 
+    // If I set an effect for currTimer, and the index changes after a timer is removed, I don't want to effect to override the current values
+    const [timerChange, setTimerChange ] = React.useState(false);
+
 
     const congrats = () => {
       /********************************************
@@ -59,6 +63,7 @@ const AppProvider = ({children}) => {
     const archiveTimer = useCallback(() => {
 
        if (currTimer + 1 !== queue.length) {
+         setTimerChange(true);
          playNewRound();
          setCurrTimer(currTimer + 1);
          setFinished(false);
@@ -72,6 +77,19 @@ const AppProvider = ({children}) => {
     }, [currTimer, queue, playNewRound])
 
 
+    useEffect(() => {
+      // if (queue) {
+      //   if (queue.length > 0 && homePage) {
+      //     // MAKE A DUMMY currTIMER thingy!!!! 
+      //     populateInitialVals(queue[currTimer]);
+      //   }
+      // }
+      if (timerChange) {
+        populateInitialVals(queue[currTimer]);
+        setTimerChange(false);
+      }
+      
+    })
     
     
     const skipTimer = useCallback(() => {
@@ -117,6 +135,8 @@ const AppProvider = ({children}) => {
       setFinished(false);
       setPaused(false);
       setCurrRound(1);
+      setCurrElapsed(0);
+      setTotalElapsed(0);
     }; 
     
     
@@ -127,6 +147,7 @@ const AppProvider = ({children}) => {
         archiveTimer(); 
       }
     })
+
 
     useEffect(() => {
       // Announce the actual end of the entire workout
@@ -142,6 +163,7 @@ const AppProvider = ({children}) => {
     
 
 
+
     const countDown = useCallback(() => {
     
         if (paused || finished || queue.length === 0) return;
@@ -155,6 +177,7 @@ const AppProvider = ({children}) => {
                     setCurrTime(queue[currTimer].workSeconds)
                 } else {
                     setFinished(true);
+                    queue[currTimer].finished = true; 
                 };
             } else if (queue[currTimer].type === "Tabata") {
                 // Handle end of Tabata
@@ -168,13 +191,16 @@ const AppProvider = ({children}) => {
                       setCurrTime(queue[currTimer].workSeconds)
                     } else {
                       setFinished(true);
+                      queue[currTimer].finished = true; 
                     }; 
                 } else {
                     setFinished(true);
+                    queue[currTimer].finished = true; 
                 };
             } else if (queue[currTimer].type === "Countdown") {
                 // Handle end of countdown
                 setFinished(true);
+                queue[currTimer].finished = true; 
                 console.log('FINISHED');
             }
         } else {
@@ -202,6 +228,7 @@ const AppProvider = ({children}) => {
             setTotalElapsed(totalElapsed + 1);
         } else {
             setFinished(true);
+            queue[currTimer].finished = true; 
         };
 
     }, [currTime, queue, paused, finished, currTimer, totalElapsed, currElapsed]);
@@ -216,26 +243,25 @@ const AppProvider = ({children}) => {
     }, []);
 
 
+    async function populateInitialVals(timer){
+      // Populates the initial values whenever the active timer changes 
+      if (timer.type !== "Stopwatch") {
+        setCurrTime(timer.workSeconds); 
+        setCurrRound(1); 
+        setCurrAction("Work"); 
+      } else {
+        setCurrTime(0); 
+      }
+    };
+
+
       useEffect(() => {
         /*****************************************************************
          * Listens for action changes (rest, work); 
          * Switches the ative currTime conditionally;
          *****************************************************************/
         if (queue && running && !finished) {
-          if (queue[currTimer].type === "XY" || queue[currTimer].type === "Tabata") {
-              if (currAction === "Work") {
-                  setCurrTime(queue[currTimer].workSeconds);
-              } else if (currAction.includes("Rest")) {
-                  setCurrTime(queue[currTimer].restSeconds); 
-              } 
-          } else if (queue[currTimer].type === "Stopwatch") {
-            // Stopwatch starts at 0 
-            setCurrAction("Work"); 
-            setCurrTime(0);
-          } else if (queue[currTimer].type === "Countdown") {
-            setCurrTime(queue[currTimer].workSeconds);
-            setCurrAction("Work");
-          };
+          
           setIsTimerReady(true);
         }
       }, [currAction, queue, running, isTimerReady, currTimer, finished])
@@ -288,20 +314,25 @@ const AppProvider = ({children}) => {
 
       if (currTimer === id) {
         // If we delete 2, and there's timers after it, keep the current index 
-        if (queue.length > currTimer) {
+        if (queue.length > currTimer + 1) {
           setCurrTimer(currTimer); 
         } else {
           setCurrTimer(currTimer - 1); 
-        }
+        }; 
       } else if (currTimer < id) {
         setCurrTimer(currTimer); 
       } else if (currTimer > id) {
         setCurrTimer(currTimer - 1); 
       };
+
+      
         
       // Delete the intended timer and set the update queue to state
       let filteredQueue = queue.filter((_, index) => index !== id);
       setQueue(filteredQueue);
+
+      
+      
 
     };
 
@@ -328,6 +359,9 @@ const AppProvider = ({children}) => {
                 skipTimer, 
                 removeTimer,
                 archiveTimer,
+                populateInitialVals, 
+
+                setTimerChange, 
             }}>
             {children}
         </AppContext.Provider>
