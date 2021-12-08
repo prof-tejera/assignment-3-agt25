@@ -220,6 +220,8 @@ const AddWorkoutView = ()  => {
 
     e.preventDefault();
 
+    
+
     let timerObj = formatInput();
     addTimer(timerObj).then((val) => {
 
@@ -236,9 +238,12 @@ const AddWorkoutView = ()  => {
       setRestSecs("");
       setRounds("");
       setRunning(true);
-      setTimerChange(true);
-
-      
+    
+      if (queue.length > 1) {
+        setTimerChange(false);
+      } else {
+        setTimerChange(true);
+      }
       
       if (btnClicked === "Start") {
         // Take the user home 
@@ -253,6 +258,8 @@ const AddWorkoutView = ()  => {
         setBtnClicked("Add");
         setPaused(true);
       }
+
+      
     });
   }; 
 
