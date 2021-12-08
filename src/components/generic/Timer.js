@@ -72,7 +72,7 @@ const Timer = () => {
                     {/* End button */}
                     <Button outline="2px solid #302F2F" 
                                     outlineOffset="2px"
-                                    disabled={false}
+                                    disabled={finished}
                                     onClick={skipTimer}>
                                     Skip
                     </Button>
