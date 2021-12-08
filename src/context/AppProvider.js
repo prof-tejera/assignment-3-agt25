@@ -8,59 +8,58 @@ import roundChangeSound from '../sounds/round-change.wav';
 import congratsSound from "../sounds/congrats.wav";
 
 
-
 export const AppContext = React.createContext({});
 
 const AppProvider = ({children}) => {
 
-    // Import target rounds, run time, rest time from InputContext
-    const { timers, totalTime, setNewVisit, setTotalTime } = React.useContext(InputContext);
+    // Import stats from Input 
+    const { timers, totalTime, setNewVisit, setTotalTime, homePage } = React.useContext(InputContext);
 
     // Document and fonts state
     const [isReady, setIsReady] = useState(false);
+    const [newConfigs, setNewConfigs] = React.useState(false);
+    const [isTimerReady, setIsTimerReady ] = React.useState(false);
 
     // The queue is originally filled with the user's configs
     const [queue, setQueue] = React.useState(timers);
 
-    const [newConfigs, setNewConfigs] = React.useState(false);
-
+    // Workout actions 
     const [paused, setPaused] = React.useState(false);
     const [running, setRunning] = React.useState(false);
-    const [currAction, setCurrAction] = React.useState("Work");
+    const [finished, setFinished] = React.useState(false);
 
+    // Current stats 
+    const [currAction, setCurrAction] = React.useState("Work");
     const [currRound, setCurrRound] = React.useState(1);
+    const [currTime, setCurrTime] = React.useState(0);
+    const [currTimer, setCurrTimer ] = React.useState(0);
 
 
     const [currElapsed, setCurrElapsed] = React.useState(0);
-
     const [totalElapsed, setTotalElapsed] = React.useState(0);
-
-    const [finished, setFinished] = React.useState(false);
-
-    const [currTime, setCurrTime] = React.useState(0);
-
-    
-    // on skip, add the total timers in the queue
-    // curr Elapsed should be added to the total so far ? 
-    // and it should be added to the totalElapsed once the timer is finished
-    // and set to 0. 
-    
-
-    const [isTimerReady, setIsTimerReady ] = React.useState(false);
-
-    const [currTimer, setCurrTimer ] = React.useState(0);
-
     const [workoutEnd, setWorkoutEnd] = React.useState(false);
+
+
     const [playNewRound] = useSound(roundChangeSound);
     const [playCongratsSound] = useSound(congratsSound);
 
-    
-  
-    
 
+    const congrats = () => {
+      /********************************************
+       * Confetti animation congratulates the user
+       ********************************************/
+      confetti({
+        particleCount: 150,
+        spread: 60
+      });
+     
+    };
+
+    
     const archiveTimer = useCallback(() => {
-      console.log('finished!!!!');
+
        if (currTimer + 1 !== queue.length) {
+         playNewRound();
          setCurrTimer(currTimer + 1);
          setFinished(false);
          setCurrElapsed(0);
@@ -70,14 +69,10 @@ const AppProvider = ({children}) => {
          setPaused(true);
          
        }; 
-      
-    }, [currTimer, queue])
+    }, [currTimer, queue, playNewRound])
 
 
-    const endCurrTimer = () => {
-      console.log('vfdyyg')
-    }
-
+    
     
     const skipTimer = useCallback(() => {
       let curr = queue[currTimer]; 
@@ -98,7 +93,6 @@ const AppProvider = ({children}) => {
 
         // Go to the next timer 
         setCurrTimer(currTimer + 1); 
-        
       } else {
         if (curr.type === "Stopwatch") {
           console.log(`fhduhd${curr.workSeconds}`);
@@ -133,6 +127,16 @@ const AppProvider = ({children}) => {
       }
     })
 
+    useEffect(() => {
+      // Announce the actual end of the entire workout
+      if (totalElapsed === totalTime && queue.length > 0 && homePage) {
+        if (totalElapsed !== 0) {
+          setWorkoutEnd(true);
+          congrats();
+          playCongratsSound();
+        };
+      }; 
+    }, [totalElapsed, totalTime, homePage, playCongratsSound, queue])
 
     
 
@@ -182,12 +186,6 @@ const AppProvider = ({children}) => {
 
 
 
-  
-
-
-    
-
-
     const countUp = useCallback(() => {
         /*******************************************************
        * Used by "Stopwatch"
@@ -208,7 +206,6 @@ const AppProvider = ({children}) => {
     }, [currTime, queue, paused, finished, currTimer, totalElapsed, currElapsed]);
 
 
-
     
     useEffect(() => {
         /* When the app loads, load the fonts; 
@@ -217,7 +214,6 @@ const AppProvider = ({children}) => {
     }, []);
 
 
-    
       useEffect(() => {
         /*****************************************************************
          * Listens for action changes (rest, work); 
@@ -274,9 +270,6 @@ const AppProvider = ({children}) => {
 
     
 
-
-
-
     async function removeTimer(id) {
       /*********************************************************
        * Removes the intended timer from the queue after 
@@ -332,34 +325,29 @@ const AppProvider = ({children}) => {
 
     };
 
-   
-
-    
 
     return (
         <AppContext.Provider
             value={{
                 isReady,
-                removeTimer,
-                archiveTimer,
-                queue, setQueue,
                 newConfigs, setNewConfigs,
+
+                queue, setQueue,
                 paused, setPaused,
                 running, setRunning,
+                finished, setFinished,
+                workoutEnd,
+
                 currAction, setCurrAction,
                 currRound, setCurrRound, 
-
-                currTime, 
-                setCurrTime, 
-                finished,
-                setFinished,
-                totalElapsed, 
-
+                currTime, setCurrTime, 
                 currTimer,
-                workoutEnd,
+                totalElapsed, currElapsed,
+                
                 resetTimer,
                 skipTimer, 
-                currElapsed
+                removeTimer,
+                archiveTimer,
             }}>
             {children}
         </AppContext.Provider>

@@ -150,12 +150,9 @@ const TimersView = ()  => {
 
   
   const { newVisit, setNewVisit, setHomePage } = React.useContext(InputContext);
-  const { queue, archiveTimer, setPaused, setRunning, currTimer } = React.useContext(AppContext);
+  const { queue, setPaused, setRunning, currTimer } = React.useContext(AppContext);
   let navigate = useNavigate();
   
-
-
-
    
   const addWorkout = () => {
     setHomePage(false);

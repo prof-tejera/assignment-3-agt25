@@ -39,7 +39,6 @@ const CustomInput = styled.input`
   border: 1px solid #D3D3D3;
   margin: auto;
   font-size: 16px;
-
 `;
 
 const CustomSelect = styled.select`
@@ -69,25 +68,24 @@ const CustomSelect = styled.select`
   5px 5px,
   5px 5px,
   1.5em 1.5em;
-background-repeat: no-repeat;
-:focus {
-  background-image:
-    linear-gradient(45deg, white 50%, transparent 50%),
-    linear-gradient(135deg, transparent 50%, white 50%),
-    radial-gradient(gray 70%, transparent 72%);
-  background-position:
-    calc(100% - 15px) 1em,
-    calc(100% - 20px) 1em,
-    calc(100% - .5em) .5em;
-  background-size:
-    5px 5px,
-    5px 5px,
-    1.5em 1.5em;
   background-repeat: no-repeat;
-  border-color: green;
-  outline: 0;
-
-}
+  :focus {
+    background-image:
+      linear-gradient(45deg, white 50%, transparent 50%),
+      linear-gradient(135deg, transparent 50%, white 50%),
+      radial-gradient(gray 70%, transparent 72%);
+    background-position:
+      calc(100% - 15px) 1em,
+      calc(100% - 20px) 1em,
+      calc(100% - .5em) .5em;
+    background-size:
+      5px 5px,
+      5px 5px,
+      1.5em 1.5em;
+    background-repeat: no-repeat;
+    border-color: green;
+    outline: 0;
+  }
 `;
 
 
@@ -98,7 +96,6 @@ const Label = styled.div`
   padding: 0.25rem 0;
   margin-top: 1.2rem;
   display: inline-block;
-  
   p {
     display: inline-block;
     font-weight: 400;
@@ -110,19 +107,16 @@ const Label = styled.div`
 `;
 
 const ActiveTiles = styled.div`
-display: flex;
-flex-direction: row;
-flex-wrap: wrap;
-justify-content: center;
-align-items: normal;
-align-content: normal;
-width: 75%;
-margin: auto;
-border-bottom: 1px dotted white;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: normal;
+  align-content: normal;
+  width: 75%;
+  margin: auto;
+  border-bottom: 1px dotted white;
 `;
-
-
-
 
 const AddStartBtn = styled.button`
   background-color: #3bb78f;
@@ -140,7 +134,6 @@ const AddStartBtn = styled.button`
   }
 `;
 
-
 const AddBtn = styled.button`
   background-color: transparent;
   border: 2px solid green;
@@ -152,10 +145,7 @@ const AddBtn = styled.button`
   :hover {
     background-color: black;
     color: white;
-
   }
-  
-  
 `;
 
 
@@ -163,13 +153,11 @@ const HomeBtn = styled.div`
   height: 60px;
   font-size: 18px;
   background-color: transparent;
-  
   color: #1f1f1;
   :hover {
     color: goldenrod;
   }
 `;
-
 
 const BtnsWrapper = styled.div`
 display: flex;
@@ -181,30 +169,20 @@ align-content: normal;
   margin: 1.25rem 0;
   padding: 1rem 0 2rem 0;
   border-bottom: 1px solid grey;
-
 `;
 
 
 const AddWorkoutView = ()  => {
 
-  
-  const { setNewVisit, 
-          timer, setTimerType, 
-          workSecs, setWorkSecs, 
-          rounds, setRounds, 
-          restSecs, setRestSecs, 
-          addTimer, 
-          setBtnClicked } = React.useContext(InputContext);
+  const { setNewVisit, timer, setTimerType, addTimer, setBtnClicked, setHomePage, 
+          workSecs, setWorkSecs, rounds, setRounds, restSecs, setRestSecs } = React.useContext(InputContext);
 
   const { queue, setQueue, setRunning, running, setPaused, paused } = React.useContext(AppContext);
 
-
-
   let btnClicked = null;
-  
-
   const navigate = useNavigate();
   
+
   const saveTimer = (e) => {
 
     e.preventDefault();
@@ -231,7 +209,9 @@ const AddWorkoutView = ()  => {
         // Take the user home 
         setBtnClicked("Start");
         setPaused(false);
+        setHomePage(true);
         navigate("/");
+        
       } else if (btnClicked === "Add") {
         // Allow the user to keep adding other timers
         setBtnClicked("Add");
@@ -249,19 +229,18 @@ const AddWorkoutView = ()  => {
   }, [running, queue, paused, setNewVisit])
 
 
-
-  
-  
   const handleHome = (e) => {
     if (queue.length > 0) {
       setRunning(true); 
     } else {
       setRunning(false);
       setNewVisit(true);
-      navigate("/");
+     
     };
-    navigate("/")
-  }
+    setHomePage(true); 
+    navigate("/");
+  }; 
+
 
   const checkTimeInput = (e) => {
     let id = e.target.id;
@@ -290,32 +269,28 @@ const AddWorkoutView = ()  => {
   };
 
   
-
   const formatInput = () => {
     if (timer === "Stopwatch" || timer === "Countdown") {
       return {
         type: timer, 
         workSeconds: workSecs
-      }
+      };
     } else if (timer === "XY") {
       return {
         type: timer, 
         workSeconds: workSecs, 
         rounds: rounds
-      }
+      };
     } else if (timer === "Tabata") {
       return {
         type: timer, 
         workSeconds: workSecs, 
         rounds: rounds,
         restSeconds: restSecs,
-      }
-    }
-    }
+      };
+    };
+  };
      
-
-    // reset the input settings
-  
 
   return (
       <> 

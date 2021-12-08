@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { AppContext } from "../../context/AppProvider";
+import { InputContext } from "../../context/InputProvider";
 
 
 const ProgressContainer = styled.div`
@@ -14,12 +15,13 @@ const ProgressContainer = styled.div`
 
 const ProgressBar = () => {
 
-  const { queue, currAction } = React.useContext(AppContext);
-  
+  const { totalElapsed } = React.useContext(AppContext);
+  const { totalTime } = React.useContext(InputContext);
+
   return (
     <>
       <ProgressContainer>
-        <progress value={14} max={currAction === "Work" ? queue[0].workSeconds : queue[0].restSeconds}></progress>
+        <progress value={totalElapsed} max={totalTime}></progress>
       </ProgressContainer>  
     </>
   );

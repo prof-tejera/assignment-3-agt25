@@ -6,14 +6,12 @@ import { formatTime } from "../../utils/helpers";
 import { AppContext } from '../../context/AppProvider';
 
 
-
 const timerThemes = {
   Stopwatch: "#AAD2E9", 
   Countdown: "#E3C891",
   XY: "#91D8E3", 
   Tabata: "#91E3B2"
-}
-
+};
 
 const TileWrapper = styled.div`
   display: flex;
@@ -31,9 +29,7 @@ const TileWrapper = styled.div`
   border: ${(props) => props.index === props.current ? '1px solid yellow' : 'none'};
   -webkit-box-shadow: ${(props) => props.index === props.current ? '5px 5px 7px 9px rgba(255,254,138,0.4)' : 'none'};
   box-shadow: ${(props) => props.index === props.current ? '5px 5px 7px 9px rgba(255,254,138,0.4)' : 'none'};
-
-
-  `;
+`;
 
 const Title = styled.h3`
   margin: -3px;
@@ -64,16 +60,12 @@ const Icon = styled(BookmarkXFill)`
   left: 88px;
   top: -10px;
   margin-bottom: -2rem;
-
 `;
 
 const TimerNumber = styled(Col)`
   padding-bottom: 1rem;
   margin: auto;
   font-size: 20px;
-
-
-
 `;
 
 
@@ -82,10 +74,8 @@ const TimerTile = (props) => {
     const {currTimer, removeTimer, paused } = React.useContext(AppContext);
  
     
-
     return (
       <>
-      
           <TileWrapper index={index} current={currTimer}>
             {paused &&  
               <Icon size={40} color="red" onClick={(e) => removeTimer(index)}/> 
@@ -118,11 +108,10 @@ const TimerTile = (props) => {
                   <div>Rest</div>
                   <div>{formatTime(rest)}</div>
                </Col> }
-             
             </StatsWrapper>
 
             <TimerNumber>
-             {index + 1}
+                {index + 1}
             </TimerNumber>
           </TileWrapper>
       </>
