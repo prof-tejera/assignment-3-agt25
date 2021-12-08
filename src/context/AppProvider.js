@@ -44,6 +44,8 @@ const AppProvider = ({children}) => {
 
     const [timerChange, setTimerChange] = React.useState(false);
 
+    const [timerRemoved, setTimerRemoved] = React.useState(false);
+
 
     const congrats = () => {
         /********************************************************************************
@@ -96,6 +98,8 @@ const AppProvider = ({children}) => {
 
     }, [timerChange, currTimer, queue, isTimerReady])
 
+    
+
 
     const resetTimer = () => {
       /*******************************************************************************
@@ -138,7 +142,7 @@ const AppProvider = ({children}) => {
         }
       }
       
-    }, [queue, currTimer])
+    }, [queue, currTimer, isTimerReady])
 
 
     useEffect(() => {
@@ -339,6 +343,8 @@ const AppProvider = ({children}) => {
         timer.finished = true;
         setTotalElapsed(totalTime);
 
+
+
     };
 
     useEffect(() => {
@@ -350,10 +356,12 @@ const AppProvider = ({children}) => {
     })
 
     const skipTimer = () => {
+        setCurrElapsed(0);
         queue[currTimer].finished = true; 
         // The new total to add to elapsed
-        let prevElapsed = parseInt(totalElapsed) - parseInt(currElapsed);
-        let newElapsed = prevElapsed + calculateTotals(currTimer);
+        // let prevElapsed = parseInt(totalElapsed) - parseInt(currElapsed);
+        // let newElapsed = prevElapsed + calculateTotals(currTimer);
+        
         if (currTimer + 1 === queue.length) {
 
             // populate end!!!!!  we've skipped the final one MAKE IT A FUNCTION!!!!!!! so
@@ -362,7 +370,7 @@ const AppProvider = ({children}) => {
             populateFinishedVals(queue[currTimer])
         } else {
             setCurrTimer(currTimer + 1);
-            setTotalElapsed(newElapsed);
+            setTotalElapsed(calculateElapsed()); 
             setTimerChange(true);
             
         };
@@ -374,6 +382,10 @@ const AppProvider = ({children}) => {
        * Removes the intended timer from the queue after
        * conditionally updating the currTimer's state.
        **********************************************************/
+
+        if (id === currTimer) {
+          setCurrElapsed(0); 
+        }; 
 
          let oldTotal = parseInt(calculateTotals(id));
          let newTotal = parseInt(totalTime) - oldTotal;
@@ -391,36 +403,44 @@ const AppProvider = ({children}) => {
         
 
         // active timer = 2
+        
+
+        
+
         if (currTimer === id) {
+         
+          // If we delete 2, and there's timers after it, keep the current index
+          // thereby making active timer 3 (now index 2)
+          if (queue.length > currTimer + 1) {
+              setCurrTimer(currTimer);
+              setTimerChange(true);
+      
+              
+          } else {
+              // else, if there's no timers in front, jump back a timer 
+              setCurrTimer(currTimer - 1);
+              setTimerChange(true);
+              
+          };
+      } else if (currTimer < id) {
+          setCurrTimer(currTimer);
+        
+         
+      } else if (currTimer > id) {
+          setCurrTimer(currTimer - 1);
+          
+          
+      };
 
-            // If we delete 2, and there's timers after it, keep the current index
-            // thereby making active timer 3 (now index 2)
-            if (queue.length > currTimer + 1) {
-                setCurrTimer(currTimer);
-                
-            } else {
-                // else, if there's no timers in front, jump back a timer 
-                setCurrTimer(currTimer - 1);
-                setTimerChange(true);
-            };
-        } else if (currTimer < id) {
-            setCurrTimer(currTimer);
-        } else if (currTimer > id) {
-            setCurrTimer(currTimer - 1);
-        };
 
         
-
-        
-
-        // If we've deleted a non active timer, there's no elapsed changes
         if (id > currTimer) {
             console.log('larger');
         } else if (id < currTimer) {
             console.log('smaller')
             let newElapsed = parseInt(totalElapsed) - oldTotal;
             setTotalElapsed(newElapsed);
-            setTimerChange(true);
+            
         } else if (id === currTimer) {
           setTimerChange(true);
             if (id === 0) {
@@ -438,10 +458,36 @@ const AppProvider = ({children}) => {
         let filteredQueue = queue.filter((_, index) => index !== id);
         setQueue(filteredQueue);
 
-      
         
+       
 
+       
     };
+
+    const calculateElapsed = () => {
+      let arr = queue; 
+      var elapsed = 0; 
+      arr.forEach((timer, index) => {
+        if (timer.finished === true) {
+          console.log(index);
+          let timerElapsed = parseInt(calculateTotals(index)); 
+          elapsed += timerElapsed;
+        }
+      })
+      
+      
+      return elapsed; 
+    }
+
+    useEffect(() => {
+      if (timerRemoved && isTimerReady) {
+        setTotalElapsed(calculateElapsed());
+        if (currElapsed) {
+          setTotalElapsed(totalElapsed + currElapsed);
+        } 
+        setTimerRemoved(false);
+      }
+    })
 
    
 
