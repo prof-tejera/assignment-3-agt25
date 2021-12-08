@@ -116,6 +116,7 @@ const AppProvider = ({children}) => {
       setCurrTimer(0);
       setFinished(false);
       setPaused(false);
+      setCurrRound(1);
     }; 
     
     
@@ -207,6 +208,7 @@ const AppProvider = ({children}) => {
 
 
     
+    
     useEffect(() => {
         /* When the app loads, load the fonts; 
            gets rid of FOUT */
@@ -268,7 +270,7 @@ const AppProvider = ({children}) => {
   }, [running, countDown, countUp, queue, isTimerReady, currTimer])
 
 
-    
+  
 
     async function removeTimer(id) {
       /*********************************************************
@@ -276,49 +278,27 @@ const AppProvider = ({children}) => {
        * conditionally updating the currTimer's state. 
        **********************************************************/
 
-      if (id === 0) {
-        /*******************************************
-        * Handle deletion of timer 0 
-        * *****************************************/ 
-        if (currTimer === 0) {
-          if (queue.length > 1) {
-            /* If 0 is the current timer, and there's one next to it, 
-            set it back to 0 */ 
-            setCurrTimer(0);
-          } else {
-            // If there's no other timers, delete 0 and reset the app
-            setNewVisit(true);
-            setRunning(false);
-            setFinished(false);
-            setTotalTime(0);
-          };
-        } else {
-          setCurrTimer(currTimer - 1);
-        };
-      } else if (id === currTimer) {
-       /*******************************************
-       * Handle deletion of the current Timer 
-       * *****************************************/ 
-        if (currTimer + 1 <= queue.length) {
-           // If it's not the last timer, keep the previous index 
-          setCurrTimer(currTimer - 1);
-        } else {
-          // Else, go back an index 
-          setCurrTimer(currTimer - 1);
-        };
-      } else {
-        /*******************************************
-       * Handle deletion of non-active timers
-       * *****************************************/ 
-        if (id + 1 <= queue.length) {
-          console.log('non active, one more there!')
-          setCurrTimer(currTimer);
-        } else {
-          setCurrTimer(currTimer - 1);
-        };
-      };
-      
+      // 0 1 2 3 
+      if (id === 0 && queue.length === 1) {
+        setNewVisit(true);
+        setRunning(false);
+        setFinished(false);
+        setTotalTime(0);
+      }; 
 
+      if (currTimer === id) {
+        // If we delete 2, and there's timers after it, keep the current index 
+        if (queue.length > currTimer) {
+          setCurrTimer(currTimer); 
+        } else {
+          setCurrTimer(currTimer - 1); 
+        }
+      } else if (currTimer < id) {
+        setCurrTimer(currTimer); 
+      } else if (currTimer > id) {
+        setCurrTimer(currTimer - 1); 
+      };
+        
       // Delete the intended timer and set the update queue to state
       let filteredQueue = queue.filter((_, index) => index !== id);
       setQueue(filteredQueue);
