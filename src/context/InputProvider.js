@@ -60,7 +60,6 @@ const InputProvider = ({ children }) => {
     if (btnClicked === "Start") {
       setRunning(true);
 
-
     }
   })
 

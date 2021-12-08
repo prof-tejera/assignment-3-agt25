@@ -44,7 +44,7 @@ const AppProvider = ({children}) => {
 
     const [timerChange, setTimerChange] = React.useState(false);
 
-    const [timerRemoved, setTimerRemoved] = React.useState(false);
+   
 
 
     const congrats = () => {
@@ -86,17 +86,15 @@ const AppProvider = ({children}) => {
        * Example: Stopwatch is at 0:06, and we delete the timer before it,
        * we don't want to auto-populate the value of the current Stopwatch at 0:00.
        ********************************************************************************/
-        if (timerChange && isTimerReady) {
-            if (queue[currTimer].finished === true) {
-              populateFinishedVals(queue[currTimer]);
-            } else {
-              populateInitialVals(queue[currTimer]);
-            };
-            
-            setTimerChange(false);
-        }
-
-    }, [timerChange, currTimer, queue, isTimerReady])
+            if (timerChange && isTimerReady && queue) {
+              if (queue[currTimer].finished === true) {
+                populateFinishedVals(queue[currTimer]);
+              } else {
+                populateInitialVals(queue[currTimer]);
+              };
+              setTimerChange(false);
+          }
+    })
 
     
 
@@ -273,7 +271,6 @@ const AppProvider = ({children}) => {
 
     useEffect(() => {
         let intervalId;
-
         if (running && queue && isTimerReady) {
             let timerType = queue[currTimer].type;
             switch (timerType) {
@@ -396,8 +393,18 @@ const AppProvider = ({children}) => {
             setNewVisit(true);
             setRunning(false);
             setFinished(false);
+            setWorkoutEnd(false);
             setTotalTime(0);
+            setTotalElapsed(0);
+            setCurrElapsed(0);
             setIsTimerReady(false);
+            setCurrTimer(0);
+            setCurrTime(0);
+            setCurrAction("Work");
+            setQueue(null); 
+            setCurrRound(1);
+        
+    
         };
 
         
@@ -416,12 +423,14 @@ const AppProvider = ({children}) => {
               setTimerChange(true);
       
               
-          } else {
+          } else if (queue.length < currTimer + 1) {
               // else, if there's no timers in front, jump back a timer 
               setCurrTimer(currTimer - 1);
               setTimerChange(true);
               
-          };
+          } else if (queue.length === currTimer + 1) {
+            setCurrTimer(0);
+          }
       } else if (currTimer < id) {
           setCurrTimer(currTimer);
         
@@ -479,22 +488,14 @@ const AppProvider = ({children}) => {
       return elapsed; 
     }
 
-    useEffect(() => {
-      if (timerRemoved && isTimerReady) {
-        setTotalElapsed(calculateElapsed());
-        if (currElapsed) {
-          setTotalElapsed(totalElapsed + currElapsed);
-        } 
-        setTimerRemoved(false);
-      }
-    })
+    
 
    
 
     return (
         <AppContext.Provider
             value={{
-                isReady,
+                isReady, setIsTimerReady, 
                 newConfigs, setNewConfigs,
                 queue, setQueue,
                 paused, setPaused,

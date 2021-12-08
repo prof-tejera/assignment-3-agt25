@@ -1,6 +1,6 @@
 import React from "react";
 import { AppContext } from "../../context/AppProvider";
-import { InputContext } from "../../context/InputProvider";
+
 import { formatTime } from "../../utils/helpers";
 
 import styled from "styled-components";
@@ -144,7 +144,7 @@ const CircleWrapper = styled.div`
 
 const TimersScreen = () => {
 
-  const { queue, actionHelper, running, paused, finished, currRound, currAction, currTime, currTimer } = React.useContext(AppContext);
+  const { queue, running, paused, finished, currRound, currAction, currTime, currTimer } = React.useContext(AppContext);
 
     
 

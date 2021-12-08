@@ -5,7 +5,7 @@ import { AppContext } from '../context/AppProvider';
 import { InputContext } from "../context/InputProvider";
 import { useNavigate } from 'react-router-dom';
 import { HouseDoorFill } from "react-bootstrap-icons";
-import TimerTile from "../components/generic/Tile";
+
 
 
 const Container = styled.div`
@@ -125,17 +125,7 @@ const FormInputs = styled.div`
   top: -27px;
 `;
 
-const ActiveTiles = styled.div`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: normal;
-  align-content: normal;
-  width: 75%;
-  margin: auto;
-  border-bottom: 1px dotted white;
-`;
+
 
 const AddStartBtn = styled.button`
   background-color: #3bb78f;
@@ -191,18 +181,7 @@ const BtnsWrapper = styled.div`
 `;
 
 
-const QueueContainer = styled.div`
-  margin: 1rem 0 3rem 0;
-  padding: 0.25rem 5rem 2rem 5rem;
-  border: 2px dotted white;
-  border-radius: 300px 300px 0px 0px;
-  h4 {
-    color: black !important;
-    font-weight: 600 !important;
-    font-size: 25px;
-  }; 
 
-`;
 
 
 const AddWorkoutView = ()  => {
@@ -210,13 +189,15 @@ const AddWorkoutView = ()  => {
   const { setNewVisit, timer, setTimerType, addTimer, setBtnClicked, setHomePage, 
           workSecs, setWorkSecs, rounds, setRounds, restSecs, setRestSecs } = React.useContext(InputContext);
 
-  const { queue, setQueue, setRunning, running, setPaused, paused, populateInitialVals, setTimerChange } = React.useContext(AppContext);
+  const { queue, setQueue, setRunning, running, setPaused, paused, setTimerChange, setCurrTimer } = React.useContext(AppContext);
 
   let btnClicked = null;
   const navigate = useNavigate();
   
 
   const saveTimer = (e) => {
+
+    
 
     e.preventDefault();
 
@@ -243,7 +224,7 @@ const AddWorkoutView = ()  => {
         setTimerChange(false);
       } else {
         setTimerChange(true);
-      }
+      }; 
       
       if (btnClicked === "Start") {
         // Take the user home 
@@ -422,22 +403,7 @@ const AddWorkoutView = ()  => {
       </Form>
       </Container>
 
-      {queue.length > 0 && 
-        <QueueContainer>
-        <h4>Your Queue</h4>
-        <ActiveTiles>
-         {queue.map((timer, index) => (
-                <TimerTile key={index} type={timer.type} index={index}
-                work={timer.workSeconds} rounds={timer.rounds}
-                rest={timer.restSeconds}></TimerTile>
-              )   
-          )}
-      
-      </ActiveTiles>
-      
-     
-      </QueueContainer>
-}
+   
      
      
     </>
