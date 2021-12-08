@@ -3,7 +3,9 @@ import styled from "styled-components";
 import { AppContext } from '../context/AppProvider';
 import { InputContext } from "../context/InputProvider";
 import { useNavigate } from 'react-router-dom';
+import { HouseDoorFill } from "react-bootstrap-icons";
 import TimerTile from "../components/generic/Tile";
+
 
 const Container = styled.div`
   color: black;
@@ -13,13 +15,17 @@ const Container = styled.div`
   align-items: center;
 `;
 
-const Title = styled.h1`
-  margin-top: 2.5rem;
+const Title = styled.h2`
+  margin-top: 0.6rem !important;
+  color: black !important;
+  font-weight: 600 !important;
+  font-size: 30px !important;
+  padding-bottom: 2px;
 `;
 
 const Form = styled.form`
   background-color: white;
-  height: 510px;
+  height: 535px;
   width: 350px;
   border-radius: 10px;
   display: flex;
@@ -29,6 +35,14 @@ const Form = styled.form`
   align-items: stretch;
   align-content: flex-start;
   padding: 2rem;
+  position: relative;
+  top: -10px;
+`;
+
+const FormHelper = styled.p`
+  position: relative;
+  top: -10px;
+  color: green;
 `;
 
 const CustomInput = styled.input`
@@ -88,7 +102,6 @@ const CustomSelect = styled.select`
   }
 `;
 
-
 const Label = styled.div`
   float: left;
   font-size: 16px;
@@ -104,6 +117,11 @@ const Label = styled.div`
     padding-left: 0.5rem;
     color: #B68C2B;
   }
+`;
+
+const FormInputs = styled.div`
+  position: relative;
+  top: -27px;
 `;
 
 const ActiveTiles = styled.div`
@@ -148,27 +166,41 @@ const AddBtn = styled.button`
   }
 `;
 
-
 const HomeBtn = styled.div`
   height: 60px;
   font-size: 18px;
   background-color: transparent;
-  color: #1f1f1;
+  color: #AE8932;
   :hover {
     color: goldenrod;
   }
+  padding: 1rem;
+  cursor: pointer;
 `;
 
 const BtnsWrapper = styled.div`
-display: flex;
-flex-direction: row;
-flex-wrap: nowrap;
-justify-content: space-between;
-align-items: normal;
-align-content: normal;
-  margin: 1.25rem 0;
-  padding: 1rem 0 2rem 0;
-  border-bottom: 1px solid grey;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: normal;
+  align-content: center;
+  padding: 1rem 0 1rem 0;
+  border-bottom: 1px dotted grey;
+`;
+
+
+const QueueContainer = styled.div`
+  margin: 1rem 0 3rem 0;
+  padding: 0.25rem 5rem 2rem 5rem;
+  border: 2px dotted white;
+  border-radius: 300px 300px 0px 0px;
+  h4 {
+    color: black !important;
+    font-weight: 600 !important;
+    font-size: 25px;
+  }; 
+
 `;
 
 
@@ -273,13 +305,15 @@ const AddWorkoutView = ()  => {
     if (timer === "Stopwatch" || timer === "Countdown") {
       return {
         type: timer, 
-        workSeconds: workSecs
+        workSeconds: workSecs, 
+        finished: false, 
       };
     } else if (timer === "XY") {
       return {
         type: timer, 
         workSeconds: workSecs, 
-        rounds: rounds
+        rounds: rounds, 
+        finished: false, 
       };
     } else if (timer === "Tabata") {
       return {
@@ -287,6 +321,7 @@ const AddWorkoutView = ()  => {
         workSeconds: workSecs, 
         rounds: rounds,
         restSeconds: restSecs,
+        finished: false, 
       };
     };
   };
@@ -299,9 +334,9 @@ const AddWorkoutView = ()  => {
       <Title>Add Your Workout</Title>
       <Form onSubmit={(e) => saveTimer(e)}>
 
-        <p>Scheduled Timers: {queue.length}</p>
+        <FormHelper>Scheduled Timers: {queue.length}</FormHelper>
     
-
+    <FormInputs>
     {/****************************
      * Select Timer options
      ****************************/}
@@ -357,6 +392,8 @@ const AddWorkoutView = ()  => {
         checkTimeInput(e)
        }}/>
      </div> : null }
+
+    </FormInputs>
     
     <BtnsWrapper>
       <AddBtn type="submit" onClick={(e) => btnClicked = "Add"}> Add to Queue</AddBtn>
@@ -364,13 +401,17 @@ const AddWorkoutView = ()  => {
     </BtnsWrapper>
 
 
-      <HomeBtn onClick={handleHome}>Home</HomeBtn>
+      <HomeBtn onClick={handleHome}> <HouseDoorFill/>
+        <div>
+          Home
+          </div>
+      </HomeBtn>
      
       </Form>
       </Container>
 
       {queue.length > 0 && 
-        <div>
+        <QueueContainer>
         <h4>Your Queue</h4>
         <ActiveTiles>
          {queue.map((timer, index) => (
@@ -383,7 +424,7 @@ const AddWorkoutView = ()  => {
       </ActiveTiles>
       
      
-      </div>
+      </QueueContainer>
 }
      
      
@@ -393,3 +434,4 @@ const AddWorkoutView = ()  => {
 
 
 export default AddWorkoutView;
+
