@@ -375,6 +375,9 @@ const AppProvider = ({children}) => {
        * conditionally updating the currTimer's state.
        **********************************************************/
 
+         let oldTotal = parseInt(calculateTotals(id));
+         let newTotal = parseInt(totalTime) - oldTotal;
+         setTotalTime(newTotal);
 
         // 0 1 2 3
         if (id === 0 && queue.length === 1) {
@@ -385,12 +388,11 @@ const AppProvider = ({children}) => {
             setIsTimerReady(false);
         };
 
-        if (currTimer + 1 === id) {
-
-        }
+        
 
         // active timer = 2
         if (currTimer === id) {
+
             // If we delete 2, and there's timers after it, keep the current index
             // thereby making active timer 3 (now index 2)
             if (queue.length > currTimer + 1) {
@@ -407,29 +409,41 @@ const AppProvider = ({children}) => {
             setCurrTimer(currTimer - 1);
         };
 
-        let oldTotal = parseInt(calculateTotals(id));
-        let newTotal = parseInt(totalTime) - oldTotal;
-        setTotalTime(newTotal);
+        
 
         
 
         // If we've deleted a non active timer, there's no elapsed changes
         if (id > currTimer) {
             console.log('larger');
-        } else if (id <= currTimer) {
+        } else if (id < currTimer) {
+            console.log('smaller')
             let newElapsed = parseInt(totalElapsed) - oldTotal;
             setTotalElapsed(newElapsed);
-        };
+            setTimerChange(true);
+        } else if (id === currTimer) {
+          setTimerChange(true);
+            if (id === 0) {
+              setTotalElapsed(0); 
+            } else {
+              let newElapsed = parseInt(totalElapsed) - parseInt(currElapsed) - oldTotal;
+              setTotalElapsed(newElapsed);
+              setTimerChange(true);
+            }
+            console.log('smae');
+           
+        }
 
-        
         // Delete the intended timer and set the update queue to state
         let filteredQueue = queue.filter((_, index) => index !== id);
         setQueue(filteredQueue);
 
-        
+      
         
 
     };
+
+   
 
     return (
         <AppContext.Provider
