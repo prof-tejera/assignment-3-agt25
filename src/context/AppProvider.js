@@ -84,7 +84,7 @@ const AppProvider = ({children}) => {
        * Example: Stopwatch is at 0:06, and we delete the timer before it,
        * we don't want to auto-populate the value of the current Stopwatch at 0:00.
        ********************************************************************************/
-        if (timerChange) {
+        if (timerChange && isTimerReady) {
             if (queue[currTimer].finished === true) {
               populateFinishedVals(queue[currTimer]);
             } else {
@@ -94,7 +94,7 @@ const AppProvider = ({children}) => {
             setTimerChange(false);
         }
 
-    }, [timerChange, currTimer, queue])
+    }, [timerChange, currTimer, queue, isTimerReady])
 
 
     const resetTimer = () => {
@@ -350,7 +350,7 @@ const AppProvider = ({children}) => {
     })
 
     const skipTimer = () => {
-
+        queue[currTimer].finished = true; 
         // The new total to add to elapsed
         let prevElapsed = parseInt(totalElapsed) - parseInt(currElapsed);
         let newElapsed = prevElapsed + calculateTotals(currTimer);
@@ -364,6 +364,7 @@ const AppProvider = ({children}) => {
             setCurrTimer(currTimer + 1);
             setTotalElapsed(newElapsed);
             setTimerChange(true);
+            
         };
 
     }
@@ -374,12 +375,6 @@ const AppProvider = ({children}) => {
        * conditionally updating the currTimer's state.
        **********************************************************/
 
-        // if (id + 1 === queue.length && currTimer === id) {
-        //   if (queue[currTimer - 1].finished === true) {
-        //     populateFinishedVals(queue[currTimer]);
-        //     console.log('popppppppppads');
-        //   };   
-        // }; 
 
         // 0 1 2 3
         if (id === 0 && queue.length === 1) {
@@ -390,12 +385,21 @@ const AppProvider = ({children}) => {
             setIsTimerReady(false);
         };
 
+        if (currTimer + 1 === id) {
+
+        }
+
+        // active timer = 2
         if (currTimer === id) {
             // If we delete 2, and there's timers after it, keep the current index
+            // thereby making active timer 3 (now index 2)
             if (queue.length > currTimer + 1) {
                 setCurrTimer(currTimer);
+                
             } else {
+                // else, if there's no timers in front, jump back a timer 
                 setCurrTimer(currTimer - 1);
+                setTimerChange(true);
             };
         } else if (currTimer < id) {
             setCurrTimer(currTimer);
@@ -403,26 +407,25 @@ const AppProvider = ({children}) => {
             setCurrTimer(currTimer - 1);
         };
 
-        let oldTotal = calculateTotals(id);
-        let newTotal = totalTime - oldTotal;
+        let oldTotal = parseInt(calculateTotals(id));
+        let newTotal = parseInt(totalTime) - oldTotal;
         setTotalTime(newTotal);
 
         
 
         // If we've deleted a non active timer, there's no elapsed changes
         if (id > currTimer) {
-
+            console.log('larger');
         } else if (id <= currTimer) {
-
-            let newElapsed = totalElapsed - oldTotal;
+            let newElapsed = parseInt(totalElapsed) - oldTotal;
             setTotalElapsed(newElapsed);
-        }
+        };
 
+        
         // Delete the intended timer and set the update queue to state
         let filteredQueue = queue.filter((_, index) => index !== id);
         setQueue(filteredQueue);
 
-        
         
         
 
