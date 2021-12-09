@@ -8,11 +8,12 @@ import ActionButton from "../components/generic/ActionButton";
 import ActionsCircle from "../components/generic/ActionsCircle";
 import Button from "../components/generic/Button";
 import Input from "../components/generic/Input";
+import TimerTile from "../components/generic/Tile";
 
 // Vectors 
 import HeartRate from "../images/blue-heart-rate.svg";
 import RunningIcon from "../images/running-icon.svg";
-import FlowChart from "../images/flowchart.svg";
+
 
 
 
@@ -45,41 +46,6 @@ const Title = styled.div`
   }
 `;
 
-const ArchitectureContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  align-content: center;
-  margin-bottom: 1.25rem;
-  border-top: 1px dotted #2B2F3BCF;
-  img {
-    padding: 2rem;
-    margin-bottom: 2rem;
-  }
-  div {
-    h2 {
-      font-size: 1.8rem;
-      letter-spacing: 0.1rem;
-      margin-top: -2rem;
-      background: #14161C;
-      padding: 1rem;
-      color: #A6D3CA;
-    }
-  }
-  article {
-    width: 50vw;
-    padding: 3rem;
-    text-align: center;
-    font-size: 1.1rem;
-    color: #D9D9D9;
-    p {
-      line-height: 27px;
-    }
-  }
-`;
-
 
 const Documentation = () => {
 
@@ -96,15 +62,6 @@ const Documentation = () => {
           </div>
         </Title>
       
-        {/*********************
-         * Architecture layout 
-         * ********************/}
-        <ArchitectureContainer>  
-          <div>
-            <h2>Component Architecture </h2>
-            <img src={FlowChart} width="450px" alt="Flowchart of the components architecture"/>
-          </div>
-        </ArchitectureContainer>          
       
         {/***************************
          * PropTypes start 
@@ -303,6 +260,45 @@ const Documentation = () => {
                 type: `function`,
                 defaultValue: `none`,
               },
+          ]}
+        />
+
+        <DocumentComponent
+            title="Tile"
+            component={<TimerTile type="Tabata" rounds="2" rest="15" work="30" index={0}
+            />}
+            propDocs={[
+              {
+                prop: "type",
+                description: "Determines the kind of timer type configured",
+                type: `string`,
+                defaultValue: `"Stopwatch"`,
+              },
+              {
+                prop: "work",
+                description: "Specifies the work seconds configured",
+                type: `string || number`,
+                defaultValue: `"none"`, 
+              },
+              {
+                prop: "rounds",
+                description: "Specifies the rounds configured",
+                type: `string || number`,
+                defaultValue: `"none"`,
+              },
+              {
+                prop: "rest",
+                description: "Specifies the rest seconds configured",
+                type: `string || number`,
+                defaultValue: `"none"`,
+                
+              },
+              {
+                prop: "index",
+                description: "Specifies the index of the timer in the queue",
+                type: `string || number`,
+                defaultValue: `"0"`,
+              }
           ]}
         />
 

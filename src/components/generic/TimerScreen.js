@@ -1,6 +1,5 @@
 import React from "react";
 import { AppContext } from "../../context/AppProvider";
-
 import { formatTime } from "../../utils/helpers";
 
 import styled from "styled-components";
@@ -11,11 +10,9 @@ import ActionsCircle from "./ActionsCircle";
 import OperationsCircle from "../../images/operations-circle.svg";
 import ProgressRate from "../../images/blue-heart-rate.svg";
 import RunningIcon from "../../images/running-icon.svg";
-import StretchingIcon from "../../images/stretching-icon.svg";
 import RestingIcon from "../../images/resting-icon.svg";
 import CongratsIcon from "../../images/congrats-icon.svg";
 import PlayIcon from "../../images/play-icon.svg";
-
 
 
 

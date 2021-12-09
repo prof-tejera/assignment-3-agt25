@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, NavLink, Redirect } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, NavLink } from "react-router-dom";
 import styled from "styled-components";
 import AppProvider from './context/AppProvider';
 import InputProvider from './context/InputProvider';

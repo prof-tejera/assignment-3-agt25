@@ -140,8 +140,7 @@ const AppProvider = ({children}) => {
       /*******************************************************************************
        * Resets the current values and re-starts the entire workout as configured.
        * It does not include timers deleted from the queue mid-workout.
-      ******************************************************************************/
-        console.log('RESETTTTT');   
+      ******************************************************************************/ 
         let freshQueue = queue; 
         freshQueue.forEach((timer, index) => {
           timer.finished = false; 
@@ -236,7 +235,6 @@ const AppProvider = ({children}) => {
                 // Handle end of countdown
                 setFinished(true);
                 queue[currTimer].finished = true;
-                console.log('FINISHED');
             }
         } else {
             setCurrTime(currTime - 1);
@@ -493,7 +491,6 @@ const AppProvider = ({children}) => {
       var elapsed = 0; 
       arr.forEach((timer, index) => {
         if (timer.finished === true) {
-          console.log(index);
           let timerElapsed = parseInt(calculateTotals(index)); 
           elapsed += timerElapsed;
         }

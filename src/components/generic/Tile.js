@@ -1,7 +1,8 @@
 import React from "react";
 import styled from "styled-components";
+import PropTypes from "prop-types";
 import { Col } from "react-bootstrap";
-import {BookmarkXFill } from "react-bootstrap-icons";
+import { BookmarkXFill } from "react-bootstrap-icons";
 import { formatTime } from "../../utils/helpers";
 import { AppContext } from '../../context/AppProvider';
 
@@ -71,7 +72,7 @@ const TimerNumber = styled(Col)`
 
 const TimerTile = (props) => {
     const { type, work, rounds, rest, index } = props; 
-    const {currTimer, removeTimer, paused } = React.useContext(AppContext);
+    const { currTimer, removeTimer, paused } = React.useContext(AppContext);
  
     
     return (
@@ -117,5 +118,32 @@ const TimerTile = (props) => {
       </>
     )
 };
+
+
+TimerTile.propTypes = {
+  type: PropTypes.string, 
+   work: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+  ]), 
+  rounds: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+  ]),
+  rest: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+  ]),
+  index: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+  ]),
+
+}; 
+
+TimerTile.defaultProps = {
+  type: "Stopwatch", 
+  index: 0, 
+}
 
 export default TimerTile; 

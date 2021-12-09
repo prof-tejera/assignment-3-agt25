@@ -59,8 +59,7 @@ const InputProvider = ({ children }) => {
   useEffect(() => {
     if (btnClicked === "Start") {
       setRunning(true);
-
-    }
+    }; 
   })
 
   
