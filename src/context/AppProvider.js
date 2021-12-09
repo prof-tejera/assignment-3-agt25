@@ -1,6 +1,7 @@
 import React, {useEffect, useState, useCallback} from 'react';
 import {InputContext} from './InputProvider';
 
+
 // Sound and visual effects
 import confetti from "canvas-confetti";
 import useSound from 'use-sound';
@@ -54,6 +55,42 @@ const AppProvider = ({children}) => {
         confetti({particleCount: 150, spread: 60});
     };
 
+    const populateFinishedVals = useCallback((timer) => {
+
+      if (timer.type === "Stopwatch") {
+          setCurrTime(parseInt(timer.workSeconds));
+      } else {
+          if (timer.type === "XY" || timer.type === "Tabata") {
+              setCurrRound(parseInt(timer.rounds));
+          };
+
+          if (timer.type === "Tabata") {
+              setCurrAction("Rest");
+          };
+          setCurrTime(0);
+      };
+
+      setFinished(true);
+      timer.finished = true;
+      setTotalElapsed(totalTime);
+
+
+
+  }, [totalTime]);
+
+  const populateInitialVals = useCallback((timer) => {
+
+    // Populates the initial values whenever the active timer changes
+    if (timer.type !== "Stopwatch") {
+        setCurrTime(timer.workSeconds);
+        setCurrRound(1);
+    } else {
+        setCurrTime(0);
+    }
+    setCurrAction("Work");
+}, []);
+
+
 
     const archiveTimer = useCallback(() => {
         /*****************************************************************************
@@ -94,7 +131,7 @@ const AppProvider = ({children}) => {
               };
               setTimerChange(false);
           }
-    })
+    }, [currTimer, timerChange, isTimerReady, queue, populateFinishedVals, populateInitialVals])
 
     
 
@@ -243,18 +280,7 @@ const AppProvider = ({children}) => {
             .then(() => setIsReady(true));
     }, []);
 
-    async function populateInitialVals(timer) {
-
-        // Populates the initial values whenever the active timer changes
-        if (timer.type !== "Stopwatch") {
-            setCurrTime(timer.workSeconds);
-            setCurrRound(1);
-        } else {
-            setCurrTime(0);
-        }
-        setCurrAction("Work");
-    };
-
+    
     useEffect(() => {
         /*****************************************************************
          * Listens for action changes (rest, work);
@@ -321,28 +347,7 @@ const AppProvider = ({children}) => {
         return total;
     }
 
-    const populateFinishedVals = (timer) => {
-
-        if (timer.type === "Stopwatch") {
-            setCurrTime(parseInt(timer.workSeconds));
-        } else {
-            if (timer.type === "XY" || timer.type === "Tabata") {
-                setCurrRound(parseInt(timer.rounds));
-            };
-
-            if (timer.type === "Tabata") {
-                setCurrAction("Rest");
-            };
-            setCurrTime(0);
-        };
-
-        setFinished(true);
-        timer.finished = true;
-        setTotalElapsed(totalTime);
-
-
-
-    };
+    
 
     useEffect(() => {
       if (isTimerReady && queue) {
@@ -375,20 +380,17 @@ const AppProvider = ({children}) => {
     }
 
     async function removeTimer(id) {
-        /*********************************************************
-       * Removes the intended timer from the queue after
-       * conditionally updating the currTimer's state.
-       **********************************************************/
+      /*******************************************************************************
+       * Removes the intended timer from the queue after conditionally updating 
+       * the currTimer's state. 
+       ******************************************************************************/
 
+        // Reset the elapsed value if we're removing the active timer
         if (id === currTimer) {
           setCurrElapsed(0); 
         }; 
 
-         let oldTotal = parseInt(calculateTotals(id));
-         let newTotal = parseInt(totalTime) - oldTotal;
-         setTotalTime(newTotal);
-
-        // 0 1 2 3
+        // If the active timer is the only timer, reset everything! 
         if (id === 0 && queue.length === 1) {
             setNewVisit(true);
             setRunning(false);
@@ -403,65 +405,34 @@ const AppProvider = ({children}) => {
             setCurrAction("Work");
             setQueue(null); 
             setCurrRound(1);
-        
-    
         };
 
-        
 
-        // active timer = 2
-        
-
-        
-
+        // Conditionally deletes the timer and either moves the current
         if (currTimer === id) {
-         
           // If we delete 2, and there's timers after it, keep the current index
           // thereby making active timer 3 (now index 2)
           if (queue.length > currTimer + 1) {
               setCurrTimer(currTimer);
               setTimerChange(true);
-      
               
           } else if (queue.length < currTimer + 1) {
               // else, if there's no timers in front, jump back a timer 
               setCurrTimer(currTimer - 1);
               setTimerChange(true);
-              
           } else if (queue.length === currTimer + 1) {
             setCurrTimer(0);
-          }
+          }; 
       } else if (currTimer < id) {
           setCurrTimer(currTimer);
-        
-         
       } else if (currTimer > id) {
+          /* If we're deleting a timer down the queue from the current, 
+          set the current one back */ 
           setCurrTimer(currTimer - 1);
-          
-          
       };
 
 
-        
-        if (id > currTimer) {
-            console.log('larger');
-        } else if (id < currTimer) {
-            console.log('smaller')
-            let newElapsed = parseInt(totalElapsed) - oldTotal;
-            setTotalElapsed(newElapsed);
-            
-        } else if (id === currTimer) {
-          setTimerChange(true);
-            if (id === 0) {
-              setTotalElapsed(0); 
-            } else {
-              let newElapsed = parseInt(totalElapsed) - parseInt(currElapsed) - oldTotal;
-              setTotalElapsed(newElapsed);
-              setTimerChange(true);
-            }
-            console.log('smae');
-           
-        }
+        setTotalVals(id);
 
         // Delete the intended timer and set the update queue to state
         let filteredQueue = queue.filter((_, index) => index !== id);
@@ -473,7 +444,51 @@ const AppProvider = ({children}) => {
        
     };
 
+    const setTotalVals = (id) => {
+      /***********************************************************************************
+       * Sets the state for the elapsed and total time values after a "remove" operation
+       * ********************************************************************************/
+        
+       // Calculate total workout time after a deletion 
+       let oldTotal = parseInt(calculateTotals(id));
+       let newTotal = parseInt(totalTime) - oldTotal;
+       setTotalTime(newTotal);
+
+       // Calculcate total elapsed after a deletion 
+        if (id < currTimer) {
+            /* Scenario: Timer 0 gets deleted, timer 1 is active
+            Since timer 0 was completed, we subtract its total timer value
+            (e.g. 10s) from the total (current) elapsed. 
+            */ 
+            let newElapsed = parseInt(totalElapsed) - oldTotal;
+            setTotalElapsed(newElapsed);
+
+        } else if (id === currTimer) {
+          /* Scenario: Timer 1 is active and gets deleted, set timerChange to true
+          so the initial values of Timer 2 (now 1) get populated */
+          setTimerChange(true);
+            // If we're deleting the only timer 0, reset the values. 
+            if (id === 0) {
+              setTotalElapsed(0); 
+            } else {
+              /* Scenario: Timer 1 gets deleted and we move up to timer 2 (now 1)
+                Since timer 1 may not have been finished, we calculate the total elapsed
+                from timer 0 and subtract the currElapsed (whatever was done from timer 1). 
+              */
+              let newElapsed = parseInt(totalElapsed) - parseInt(currElapsed);
+              setTotalElapsed(newElapsed);
+              setTimerChange(true);
+            }; 
+        }; 
+    }; 
+
+
     const calculateElapsed = () => {
+      /************************************************************************************
+       * Calculates the total time elapsed by adding up the values of all finished timers;
+       * Does not handle the state of those values since *setTotalVals* handles 
+       * state conditionally depending on the timer which was removed 
+       ************************************************************************************/
       let arr = queue; 
       var elapsed = 0; 
       arr.forEach((timer, index) => {
@@ -482,9 +497,7 @@ const AppProvider = ({children}) => {
           let timerElapsed = parseInt(calculateTotals(index)); 
           elapsed += timerElapsed;
         }
-      })
-      
-      
+      }); 
       return elapsed; 
     }
 

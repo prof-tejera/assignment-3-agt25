@@ -125,8 +125,6 @@ const FormInputs = styled.div`
   top: -27px;
 `;
 
-
-
 const AddStartBtn = styled.button`
   background-color: #3bb78f;
   background-image: linear-gradient(315deg, #3bb78f 0%, #0bab64 74%);
@@ -181,23 +179,18 @@ const BtnsWrapper = styled.div`
 `;
 
 
-
-
-
 const AddWorkoutView = ()  => {
 
   const { setNewVisit, timer, setTimerType, addTimer, setBtnClicked, setHomePage, 
           workSecs, setWorkSecs, rounds, setRounds, restSecs, setRestSecs } = React.useContext(InputContext);
 
-  const { queue, setQueue, setRunning, running, setPaused, paused, setTimerChange, setCurrTimer } = React.useContext(AppContext);
+  const { queue, setQueue, setRunning, running, setPaused, paused, setTimerChange } = React.useContext(AppContext);
 
   let btnClicked = null;
   const navigate = useNavigate();
   
 
   const saveTimer = (e) => {
-
-    
 
     e.preventDefault();
 
@@ -224,7 +217,7 @@ const AddWorkoutView = ()  => {
         setTimerChange(false);
       } else {
         setTimerChange(true);
-      }; 
+      }
       
       if (btnClicked === "Start") {
         // Take the user home 
@@ -403,7 +396,7 @@ const AddWorkoutView = ()  => {
       </Form>
       </Container>
 
-   
+     
      
      
     </>

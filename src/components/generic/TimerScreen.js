@@ -16,7 +16,7 @@ import RestingIcon from "../../images/resting-icon.svg";
 import CongratsIcon from "../../images/congrats-icon.svg";
 import PlayIcon from "../../images/play-icon.svg";
 
-import Theme from "../../utils/theme";
+
 
 
 const Container = styled.div`
