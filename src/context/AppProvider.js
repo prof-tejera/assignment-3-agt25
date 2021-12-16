@@ -12,6 +12,7 @@ export const AppContext = React.createContext({});
 
 const AppProvider = ({children}) => {
 
+
     // Import stats from Input
     const {timers, totalTime, setNewVisit, setTotalTime, homePage} = React.useContext(InputContext);
 

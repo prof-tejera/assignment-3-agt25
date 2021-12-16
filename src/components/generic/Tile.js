@@ -71,14 +71,14 @@ const TimerNumber = styled(Col)`
 
 
 const TimerTile = (props) => {
-    const { type, work, rounds, rest, index } = props; 
+    const { type, work, rounds, rest, index, showIcon } = props; 
     const { currTimer, removeTimer, paused } = React.useContext(AppContext);
  
     
     return (
       <>
           <TileWrapper index={index} current={currTimer}>
-            {paused &&  
+            {paused && showIcon &&
               <Icon size={40} color="red" onClick={(e) => removeTimer(index)}/> 
             }
             
@@ -138,12 +138,14 @@ TimerTile.propTypes = {
     PropTypes.string,
     PropTypes.number,
   ]),
+  showIcon: PropTypes.bool, 
 
 }; 
 
 TimerTile.defaultProps = {
   type: "Stopwatch", 
   index: 0, 
+  showIcon: true
 }
 
 export default TimerTile; 

@@ -265,7 +265,7 @@ const Documentation = () => {
 
         <DocumentComponent
             title="Tile"
-            component={<TimerTile type="Tabata" rounds="2" rest="15" work="30" index={0}
+            component={<TimerTile type="Tabata" rounds="2" rest="15" work="30" showIcon={false}
             />}
             propDocs={[
               {
@@ -298,6 +298,12 @@ const Documentation = () => {
                 description: "Specifies the index of the timer in the queue",
                 type: `string || number`,
                 defaultValue: `"0"`,
+              }, 
+              {
+                prop: "showIcon",
+                description: "Controls whether the x icon shows on the upper-right corner of the tile",
+                type: `bool`,
+                defaultValue: `"true"`,
               }
           ]}
         />
