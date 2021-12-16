@@ -3,7 +3,7 @@
 # Assignment 3 Link
 
 # Notes
-I get a warning — "The AudioContext was not allowed to start. It must be resumed (or created) after a user gesture on the page" — related to the sound effects. I'm not sure how to resolve this. I tried the suggestion on (Github: useSound)[https://github.com/joshwcomeau/use-sound/issues/22] to no avail. 
+I get a warning — "The AudioContext was not allowed to start. It must be resumed (or created) after a user gesture on the page" — related to the sound effects. I'm not sure how to resolve this. I tried the suggestion on [Github: useSound](https://github.com/joshwcomeau/use-sound/issues/22) to no avail. 
 
 In fact, I did not include the sound effects on Assignment 2 because I didn't want to get marked off. But, I can't imagine how annoying it must be to go through the timers as you grade them without the sound effects. They really help! So, I've included them for Assignment 3. I hope it makes the user / grading experience smoother. 
 
