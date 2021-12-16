@@ -1,5 +1,12 @@
 # Objective for Assignment 3
 
+# Assignment 3 Link
+
+# Notes
+I get a warning — "The AudioContext was not allowed to start. It must be resumed (or created) after a user gesture on the page" — related to the sound effects. I'm not sure how to resolve this. I tried the suggestion on (Github: useSound)[https://github.com/joshwcomeau/use-sound/issues/22] to no avail. 
+
+In fact, I did not include the sound effects on Assignment 2 because I didn't want to get marked off. But, I can't imagine how annoying it must be to go through the timers as you grade them without the sound effects. They really help! So, I've included them for Assignment 3. I hope it makes the user / grading experience smoother. 
+
 ## Queue Schema
 
 ```
@@ -8,18 +15,22 @@ const dummyTimers = [
     {
         type: 'XY',
         rounds: 3,
-        workSeconds: 90
+        workSeconds: 90, 
+        completed: true, 
     }, {
         type: 'Stopwatch',
-        workSeconds: 120
+        workSeconds: 120, 
+        completed: false, 
     }, {
         type: 'Tabata',
         workSeconds: 120,
         rounds: 8,
-        restSeconds: 110
+        restSeconds: 110,
+        completed: false, 
     }, {
         type: 'Countdown',
-        workSeconds: 180
+        workSeconds: 180,
+        completed: false, 
     }
 ];
 ```
