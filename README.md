@@ -1,6 +1,6 @@
 # Objective for Assignment 3
 
-# Assignment 3 Link
+# [Assignment 3: React Workout App](https://main.d3qx7tqe2ida13.amplifyapp.com/)
 
 # Notes
 I get a warning — "The AudioContext was not allowed to start. It must be resumed (or created) after a user gesture on the page" — related to the sound effects. I'm not sure how to resolve this. I tried the suggestion on [Github: useSound](https://github.com/joshwcomeau/use-sound/issues/22) to no avail. 
