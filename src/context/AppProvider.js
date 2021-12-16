@@ -1,21 +1,19 @@
 import React, {useEffect, useState, useCallback} from 'react';
 import {InputContext} from './InputProvider';
 
-
 // Sound and visual effects
 import confetti from "canvas-confetti";
 import useSound from 'use-sound';
 import roundChangeSound from '../sounds/round-change.wav';
 import congratsSound from "../sounds/congrats.wav";
 
+
 export const AppContext = React.createContext({});
 
 const AppProvider = ({children}) => {
 
     // Import stats from Input
-    const {timers, totalTime, setNewVisit, setTotalTime, homePage} = React.useContext(
-        InputContext
-    );
+    const {timers, totalTime, setNewVisit, setTotalTime, homePage} = React.useContext(InputContext);
 
     // Document and fonts state
     const [isReady, setIsReady] = useState(false);
@@ -46,8 +44,6 @@ const AppProvider = ({children}) => {
     const [timerChange, setTimerChange] = React.useState(false);
 
    
-
-
     const congrats = () => {
         /********************************************************************************
        * Confetti animation congratulates the user; plays only at the end of a workout.
@@ -55,8 +51,13 @@ const AppProvider = ({children}) => {
         confetti({particleCount: 150, spread: 60});
     };
 
-    const populateFinishedVals = useCallback((timer) => {
 
+    const populateFinishedVals = useCallback((timer) => {
+      /**************************************************************
+       * Populates the finished values of the workout;
+       * Especially useful when a timer has been skipped as opposed
+       * to being run till' the end
+       *************************************************************/
       if (timer.type === "Stopwatch") {
           setCurrTime(parseInt(timer.workSeconds));
       } else {
@@ -69,26 +70,22 @@ const AppProvider = ({children}) => {
           };
           setCurrTime(0);
       };
-
       setFinished(true);
       timer.finished = true;
       setTotalElapsed(totalTime);
-
-
-
   }, [totalTime]);
 
-  const populateInitialVals = useCallback((timer) => {
 
-    // Populates the initial values whenever the active timer changes
-    if (timer.type !== "Stopwatch") {
-        setCurrTime(timer.workSeconds);
-        setCurrRound(1);
-    } else {
-        setCurrTime(0);
-    }
-    setCurrAction("Work");
-}, []);
+    const populateInitialVals = useCallback((timer) => {
+        // Populates the initial values whenever the active timer changes
+        if (timer.type !== "Stopwatch") {
+            setCurrTime(timer.workSeconds);
+            setCurrRound(1);
+        } else {
+            setCurrTime(0);
+        }
+        setCurrAction("Work");
+    }, []);
 
 
 
@@ -135,7 +132,6 @@ const AppProvider = ({children}) => {
 
     
 
-
     const resetTimer = () => {
       /*******************************************************************************
        * Resets the current values and re-starts the entire workout as configured.
@@ -157,7 +153,6 @@ const AppProvider = ({children}) => {
         setWorkoutEnd(false);
     };
 
-
     useEffect(() => {
         /*************************************************************************
          * Listens for each individual timer's end; calls the archive method.
@@ -168,13 +163,16 @@ const AppProvider = ({children}) => {
     });
 
     useEffect(() => {
-      if (queue && isTimerReady) {
-        if (currTimer + 1 === queue.length && queue[currTimer].finished) {
-          setWorkoutEnd(true);
-        } else {
-          setWorkoutEnd(false);
-        }
-      }
+        /*********************************************************************
+         * Checks whether the entire workout has ended
+         *********************************************************************/
+        if (queue && isTimerReady) {
+            if (currTimer + 1 === queue.length && queue[currTimer].finished) {
+                setWorkoutEnd(true);
+            } else {
+                setWorkoutEnd(false);
+            };
+        };
       
     }, [queue, currTimer, isTimerReady])
 
@@ -192,7 +190,6 @@ const AppProvider = ({children}) => {
         };
     }, [totalElapsed, totalTime, homePage, playCongratsSound, queue])
 
-    
     
     const countDown = useCallback(() => {
       /*************************************************************************
@@ -245,7 +242,6 @@ const AppProvider = ({children}) => {
     }, [currAction, currTime, currRound, queue, paused, finished, currTimer, currElapsed, totalElapsed]);
 
     
-    
     const countUp = useCallback(() => {
         /*******************************************************
        * Used by "Stopwatch"
@@ -291,9 +287,12 @@ const AppProvider = ({children}) => {
     }, [queue, running, isTimerReady, finished]); 
 
 
-    
-
     useEffect(() => {
+        /**********************************************************************
+         * Calls the appropriate countUp or countDown functions depending on 
+         * which timer is active.
+         * When the component umounts, it clears the intervals
+         **********************************************************************/
         let intervalId;
         if (running && queue && isTimerReady) {
             let timerType = queue[currTimer].type;
@@ -302,7 +301,6 @@ const AppProvider = ({children}) => {
                     intervalId = setInterval(() => countUp(), 1000);
                     break;
                 case "Countdown":
-                    // Pass in the targets here
                     intervalId = setInterval(() => countDown(), 1000);
                     break;
                 case "XY":
@@ -312,24 +310,19 @@ const AppProvider = ({children}) => {
                     intervalId = setInterval(() => countDown(), 1000);
                     break;
                 default:
-                    setCurrAction("YEAH");
+                    setCurrAction("Work");
             };
-        }
+        };
         // Clear interval when app unmounts
         return() => clearInterval(intervalId);
 
-    }, [
-        running,
-        countDown,
-        countUp,
-        queue,
-        isTimerReady,
-        currTimer
-    ])
+    }, [running, countDown, countUp, queue, isTimerReady, currTimer])
 
 
     const calculateTotals = (id) => {
-        // Get the total values of the timer to be removed
+        /************************************************************
+         * Gets the total time values of the timer to be removed
+         **********************************************************/
         let type = queue[id].type;
         let work = parseInt(queue[id].workSeconds);
         let total;
@@ -341,41 +334,30 @@ const AppProvider = ({children}) => {
             total = work * parseInt(queue[id].rounds);
         } else {
             total = work;
-        }
+        };
         return total;
-    }
+    };
 
-    
-
-    useEffect(() => {
-      if (isTimerReady && queue) {
-        // if (queue[currTimer].finished === true) {
-        //   populateFinishedVals(queue[currTimer]);
-        // }
-      }
-    })
 
     const skipTimer = () => {
+        /*****************************************************************************
+         * Skips the current timer and moves onto the next one. 
+         * If it's the last timer, it "ends" it and congratulates the user
+         ********************************************************************************/
         setCurrElapsed(0);
         queue[currTimer].finished = true; 
-        // The new total to add to elapsed
-        // let prevElapsed = parseInt(totalElapsed) - parseInt(currElapsed);
-        // let newElapsed = prevElapsed + calculateTotals(currTimer);
-        
+       
         if (currTimer + 1 === queue.length) {
 
-            // populate end!!!!!  we've skipped the final one MAKE IT A FUNCTION!!!!!!! so
-            // it the timer change goes back and the current timer is finished, populate
-            // those vals
+            // If it's the last timer, populate the final totalTime and elapsedTotal values 
             populateFinishedVals(queue[currTimer])
         } else {
+            // Else, skip to the next timer and announce that there's been a change
             setCurrTimer(currTimer + 1);
             setTotalElapsed(calculateElapsed()); 
             setTimerChange(true);
-            
         };
-
-    }
+    }; 
 
     async function removeTimer(id) {
       /*******************************************************************************
@@ -408,39 +390,34 @@ const AppProvider = ({children}) => {
 
         // Conditionally deletes the timer and either moves the current
         if (currTimer === id) {
-          // If we delete 2, and there's timers after it, keep the current index
-          // thereby making active timer 3 (now index 2)
-          if (queue.length > currTimer + 1) {
-              setCurrTimer(currTimer);
-              setTimerChange(true);
-              
-          } else if (queue.length < currTimer + 1) {
-              // else, if there's no timers in front, jump back a timer 
-              setCurrTimer(currTimer - 1);
-              setTimerChange(true);
-          } else if (queue.length === currTimer + 1) {
+            // If we delete 2, and there's timers after it, keep the current index
+            // thereby making active timer 3 (now index 2)
+            if (queue.length > currTimer + 1) {
+                setCurrTimer(currTimer);
+                setTimerChange(true);
+                
+            } else if (queue.length < currTimer + 1) {
+                // else, if there's no timers in front, jump back a timer 
+                setCurrTimer(currTimer - 1);
+                setTimerChange(true);
+            } else if (queue.length === currTimer + 1) {
             setCurrTimer(0);
-          }; 
-      } else if (currTimer < id) {
-          setCurrTimer(currTimer);
-      } else if (currTimer > id) {
-          /* If we're deleting a timer down the queue from the current, 
-          set the current one back */ 
-          setCurrTimer(currTimer - 1);
-      };
-
+            }; 
+        } else if (currTimer < id) {
+            setCurrTimer(currTimer);
+        } else if (currTimer > id) {
+            /* If we're deleting a timer down the queue from the current, 
+            set the current one back */ 
+            setCurrTimer(currTimer - 1);
+        };
 
         setTotalVals(id);
 
         // Delete the intended timer and set the update queue to state
         let filteredQueue = queue.filter((_, index) => index !== id);
         setQueue(filteredQueue);
-
-        
-       
-
-       
     };
+
 
     const setTotalVals = (id) => {
       /***********************************************************************************
@@ -482,25 +459,22 @@ const AppProvider = ({children}) => {
 
 
     const calculateElapsed = () => {
-      /************************************************************************************
-       * Calculates the total time elapsed by adding up the values of all finished timers;
-       * Does not handle the state of those values since *setTotalVals* handles 
-       * state conditionally depending on the timer which was removed 
-       ************************************************************************************/
-      let arr = queue; 
-      var elapsed = 0; 
-      arr.forEach((timer, index) => {
-        if (timer.finished === true) {
-          let timerElapsed = parseInt(calculateTotals(index)); 
-          elapsed += timerElapsed;
-        }
-      }); 
-      return elapsed; 
-    }
+        /************************************************************************************
+         * Calculates the total time elapsed by adding up the values of all finished timers;
+         * Does not handle the state of those values since *setTotalVals* handles 
+         * state conditionally depending on the timer which was removed 
+         ************************************************************************************/
+        let arr = queue; 
+        var elapsed = 0; 
+        arr.forEach((timer, index) => {
+            if (timer.finished === true) {
+            let timerElapsed = parseInt(calculateTotals(index)); 
+            elapsed += timerElapsed;
+            }
+        }); 
+        return elapsed; 
+    };
 
-    
-
-   
 
     return (
         <AppContext.Provider

@@ -6,23 +6,23 @@ import { Row } from "react-bootstrap";
 
 
 const InputField = styled.input`
-  z-index: 1; 
-  height: ${(props) => props.height || "80px"};
-  width: ${(props) => props.width || "70px"};
-  background-color: ${(props) => props.background || "#302F2F"};
-  color: ${(props) => props.color || "#C1BEBE"};
-  border: ${(props) => props.border || "none"};
-  font-size: ${(props) => props.fontSize || "70px"};
-  font-weight: ${(props) => props.fontWeight || "200"};
-  outline: ${(props) => props.outline || "none"};
-  outline-offset: ${(props) => props.outlineOffset || "none"};
-  text-align: center;
-  text-align: -webkit-center !important;
-  margin: 0 auto;
-  font-family: league-gothic;
-  letter-spacing: 4px;
-  margin: 0.4rem;
-  line-height: 1 !important; 
+    z-index: 1; 
+    height: ${(props) => props.height || "80px"};
+    width: ${(props) => props.width || "70px"};
+    background-color: ${(props) => props.background || "#302F2F"};
+    color: ${(props) => props.color || "#C1BEBE"};
+    border: ${(props) => props.border || "none"};
+    font-size: ${(props) => props.fontSize || "70px"};
+    font-weight: ${(props) => props.fontWeight || "200"};
+    outline: ${(props) => props.outline || "none"};
+    outline-offset: ${(props) => props.outlineOffset || "none"};
+    text-align: center;
+    text-align: -webkit-center !important;
+    margin: 0 auto;
+    font-family: league-gothic;
+    letter-spacing: 4px;
+    margin: 0.4rem;
+    line-height: 1 !important; 
 `;
 
 const InputWrapper = styled.div`
@@ -46,7 +46,6 @@ const Container = styled.div`
     align-content: center;
     margin: 0.5rem 0 2rem 0;
 `;
-
 
 const Input = ({...props}) => {
     

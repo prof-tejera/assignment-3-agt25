@@ -6,7 +6,7 @@ const defaultColors = {
    dark3: "#302F2F",
    light2: "#C1BEBE",
    disabledText: "#A09D9D"
-}
+};
 
 const Button = styled.button`
   border-radius: 50%;

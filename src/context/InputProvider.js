@@ -19,9 +19,6 @@ const InputProvider = ({ children }) => {
 
   const [btnClicked, setBtnClicked] = useState("");
 
-  
-
-  
   const timers = [
     
   ]; 
@@ -60,28 +57,21 @@ const InputProvider = ({ children }) => {
     if (btnClicked === "Start") {
       setRunning(true);
     }; 
-  })
+  });
 
-  
 
-  
   
   return (
     <InputContext.Provider value={{
-
            homePage, setHomePage,
            newVisit, setNewVisit, 
-
            timer, setTimerType, 
            timers, addTimer,
            workSecs, setWorkSecs, 
            restSecs, setRestSecs, 
            rounds, setRounds, 
-
            totalTime, setBtnClicked, btnClicked,
            setTotalTime
-
-          
         }}>
         
         {children}

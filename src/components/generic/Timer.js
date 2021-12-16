@@ -43,61 +43,52 @@ const Timer = () => {
   
   const { queue, paused, setPaused, finished, resetTimer, skipTimer } = React.useContext(AppContext);
 
-
   const handleActionBtn = (e) => {
-    console.log(e.target.innerHTML);
     let btnType = e.target.innerHTML;
     if (btnType === "Pause") {
       setPaused(true); 
     } else {
       setPaused(false); 
-    }
-  }
+    };
+  };
 
-  
-  
-    return (
+  return (
       <div>
-      {/* Device component */}
-      <Device type="phone" currentTimer={queue[0].type}>
-          {/* Timer screen */}
-           
-              <TimerScreen/> 
-                
-              {/* Timer screen buttons */}
-              
-              <div>
-                <ButtonsContainer>
+        {/* Device component */}
+        <Device type="phone" currentTimer={queue[0].type}>
 
-                    {/* End button */}
-                    <Button outline="2px solid #302F2F" 
-                                    outlineOffset="2px"
-                                    disabled={finished}
-                                    onClick={skipTimer}>
-                                    Skip
-                    </Button>
-
-                  {/* Reset button */}
-                  <ResetBtn onClick={resetTimer}>
-                    Reset
-                  </ResetBtn>
+            {/* Timer screen */}
+                <TimerScreen/> 
                   
-                  {/* Pause, New, or Start button */}
-                    <ActionButton 
-                                  type={paused ? "Start" : "Pause"}
-                                  disabled={finished}
-                                  onClick={(e) => handleActionBtn(e)}> 
-                                  {paused ? "Start" : "Pause"}
-                    </ActionButton>
-                </ButtonsContainer>
-              </div>
-            
+                {/* Timer screen buttons */}
+                <div>
+                  <ButtonsContainer>
 
-           
+                      {/* End button */}
+                      <Button outline="2px solid #302F2F" 
+                                      outlineOffset="2px"
+                                      disabled={finished}
+                                      onClick={skipTimer}>
+                                      Skip
+                      </Button>
 
-        </Device>    
+                    {/* Reset button */}
+                    <ResetBtn onClick={resetTimer}>
+                      Reset
+                    </ResetBtn>
+                    
+                    {/* Pause, New, or Start button */}
+                      <ActionButton 
+                                    type={paused ? "Start" : "Pause"}
+                                    disabled={finished}
+                                    onClick={(e) => handleActionBtn(e)}> 
+                                    {paused ? "Start" : "Pause"}
+                      </ActionButton>
+                  </ButtonsContainer>
+                </div>
+          </Device>    
       </div>
-    )
+    );
 };
 
 export default Timer; 

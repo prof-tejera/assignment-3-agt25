@@ -81,7 +81,7 @@ const Documentation = () => {
 
       <DocumentComponent
           title="Action Button"
-          component={<ActionButton type="Green">Start</ActionButton>}
+          component={<ActionButton type="Start">Start</ActionButton>}
           propDocs={[
             {
               prop: "disabled",

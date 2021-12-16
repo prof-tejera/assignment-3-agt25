@@ -27,16 +27,16 @@ const Container = styled.div`
 `;
 
 const RoundTimerWrapper = styled.div`
-  height: 245px;
-  width: 245px;
-  margin: 0 auto;
-  border-radius: 50%;
-  padding-top: 5px;
-  background-image: url(${OperationsCircle});
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-  z-index: -1;
+    height: 245px;
+    width: 245px;
+    margin: 0 auto;
+    border-radius: 50%;
+    padding-top: 5px;
+    background-image: url(${OperationsCircle});
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    z-index: -1;
 `;
 
 const TopActionsContainer = styled.div`
@@ -141,67 +141,65 @@ const CircleWrapper = styled.div`
 
 const TimersScreen = () => {
 
-  const { queue, running, paused, finished, currRound, currAction, currTime, currTimer } = React.useContext(AppContext);
+    const { queue, running, paused, finished, currRound, currAction, currTime, currTimer } = React.useContext(AppContext);
 
-    
+    const timerType = queue[currTimer].type;
 
- const timerType = queue[currTimer].type;
+    return (
+        <>
+            <Container>
+                <h3>{queue[currTimer].type}</h3>
 
-        return (
-            <>
-                <Container>
-                    <h3>{queue[currTimer].type}</h3>
+                {/* Top buttons above the timer */}
+                <TopActionsContainer>
 
-                    {/* Top buttons above the timer */}
-                    <TopActionsContainer>
-
-                        {/* Left side: Conditional 'Rounds' status used by XY and TABATA */}
-                        {timerType === "XY" || timerType === "Tabata" ? 
+                    {/* Left side: Conditional 'Rounds' status used by XY and TABATA */}
+                    {timerType === "XY" || timerType === "Tabata" ? 
+                        
+                        <CircleWrapper background={"#1A1A1A"}>
                             
-                            <CircleWrapper background={"#1A1A1A"}>
-                               
-                              
-                                <ActionsCircle fontSize="50px">
-                                <div>{running ? currRound : "0"}</div>
-                                </ActionsCircle> 
-                             </CircleWrapper> : <CircleWrapper/> }
+                            
+                            <ActionsCircle fontSize="50px">
+                            <div>{running ? currRound : "0"}</div>
+                            </ActionsCircle> 
+                            </CircleWrapper> : <CircleWrapper/> }
 
-                        {/* Right side: Icon status used by all timers */}
-                        <CircleWrapper background="#1A1A1A">
-                            <ActionsCircle border="1px dotted #1C91F2"> 
-                            {currAction === "Work" &&  running && !paused 
-                                && <img src={RunningIcon} alt="Running Stick Figure"/>}
+                    {/* Right side: Icon status used by all timers */}
+                    <CircleWrapper background="#1A1A1A">
+                        <ActionsCircle border="1px dotted #1C91F2"> 
+                        {currAction === "Work" &&  running && !paused 
+                            && <img src={RunningIcon} alt="Running Stick Figure"/>}
 
-                            {currAction === "Rest" && running && !paused 
-                                && <img src={RestingIcon} alt="Standing Stick Figure"/>}
+                        {currAction === "Rest" && running && !paused 
+                            && <img src={RestingIcon} alt="Standing Stick Figure"/>}
 
-                            {currAction === "Congrats" && finished
-                                && <img src={CongratsIcon} alt="Standing Stick Figure"/>}
+                        {currAction === "Congrats" && finished
+                            && <img src={CongratsIcon} alt="Standing Stick Figure"/>}
 
-                            {paused && !finished && <img src={PlayIcon} alt="Standing Stick Figure"/>}
+                        {paused && !finished && <img src={PlayIcon} alt="Standing Stick Figure"/>}
 
-                            </ActionsCircle>
-                        </CircleWrapper>
-                    </TopActionsContainer>
+                        </ActionsCircle>
+                    </CircleWrapper>
+                </TopActionsContainer>
 
-                    {/* Round timer wrapper and timer */}
-                    <RoundTimerWrapper/>
-                        <Time> 
-                          {formatTime(currTime)}
-                        </Time>
+                {/* Round timer wrapper and timer */}
+                <RoundTimerWrapper/>
+                    <Time> 
+                        {formatTime(currTime)}
+                    </Time>
 
-                    {/* Progress bar and status value (run, rest or the initial "stretch") */}
-                    <ProgressWrapper>
-                        <img width="260px" src={ProgressRate} alt="Progress Rate"></img>
-                        <div>
-                            <ProgressBar/>
-                        </div>
-                    </ProgressWrapper>  
+                {/* Progress bar and status value (run, rest or the initial "stretch") */}
+                <ProgressWrapper>
+                    <img width="260px" src={ProgressRate} alt="Progress Rate"></img>
+                    <div>
+                        <ProgressBar/>
+                    </div>
+                </ProgressWrapper>  
 
-                    <HelperText action={currAction}>{currAction}</HelperText>       
-                </Container>   
-            </>
-        );
+                <HelperText action={currAction}>{currAction}</HelperText>       
+            </Container>   
+        </>
+    );
     
 };
 

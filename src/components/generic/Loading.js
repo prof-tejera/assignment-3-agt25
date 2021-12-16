@@ -12,7 +12,6 @@ const sizeMapping = {
 
 const Container = styled.div`
   animation: spin 1.5s linear infinite;
-
   @-moz-keyframes spin {
     100% {
       -moz-transform: rotate(360deg);

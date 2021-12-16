@@ -56,7 +56,6 @@ const Container = styled.div`
     letter-spacing: 1px;
     margin-top: -4px;
   };
-  
 `;
 
 const StyledLink = styled(NavLink)`
@@ -77,7 +76,6 @@ function App() {
         <AppProvider>
       <InputProvider>
       <AppProvider>    
-     
         <nav>
           <ul>
             <li>

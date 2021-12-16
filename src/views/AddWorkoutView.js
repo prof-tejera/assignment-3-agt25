@@ -7,7 +7,6 @@ import { useNavigate } from 'react-router-dom';
 import { HouseDoorFill } from "react-bootstrap-icons";
 
 
-
 const Container = styled.div`
   color: black;
   display: flex;
@@ -188,15 +187,14 @@ const AddWorkoutView = ()  => {
 
   let btnClicked = null;
   const navigate = useNavigate();
-  
 
   const saveTimer = (e) => {
-
+    /**********************************************************
+     * Adds a timer to the queue
+     *********************************************************/
     e.preventDefault();
-
-    
-
     let timerObj = formatInput();
+
     addTimer(timerObj).then((val) => {
 
       // Push to the queue
@@ -204,7 +202,6 @@ const AddWorkoutView = ()  => {
       oldQueue.push(timerObj)
       setQueue(oldQueue);
       
-
       // Reset Vals 
       setNewVisit(false);
       setTimerType("Stopwatch");
@@ -213,11 +210,12 @@ const AddWorkoutView = ()  => {
       setRounds("");
       setRunning(true);
     
+      // Announce if there's a timer change
       if (queue.length > 1) {
         setTimerChange(false);
       } else {
         setTimerChange(true);
-      }
+      }; 
       
       if (btnClicked === "Start") {
         // Take the user home 
@@ -225,15 +223,11 @@ const AddWorkoutView = ()  => {
         setPaused(false);
         setHomePage(true);
         navigate("/");
-        
-        
       } else if (btnClicked === "Add") {
         // Allow the user to keep adding other timers
         setBtnClicked("Add");
         setPaused(true);
-      }
-
-      
+      };
     });
   }; 
 
@@ -247,6 +241,7 @@ const AddWorkoutView = ()  => {
 
 
   const handleHome = (e) => {
+    // Takes the user home
     if (queue.length > 0) {
       setRunning(true); 
       setTimerChange(true);
@@ -261,6 +256,11 @@ const AddWorkoutView = ()  => {
 
 
   const checkTimeInput = (e) => {
+    /***************************************************************************
+     * Validates the time input values;
+     * Does not accept more than 60 minutes or 3600 seconds of time;
+     * Does not accept more than 99 rounds. 
+     **************************************************************************/
     let id = e.target.id;
     let val = e.target.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');
     if (val.length === 1 && val === 0) {
@@ -271,7 +271,6 @@ const AddWorkoutView = ()  => {
       if (val > 3600) {
         val = 3600; 
       }; 
-
       if (id === "work") {
         setWorkSecs(val);
       } else {
@@ -288,6 +287,10 @@ const AddWorkoutView = ()  => {
 
   
   const formatInput = () => {
+    /*****************************************************************
+     * Formats the inputs and creates a timer object to be added
+     * to the queue 
+     *****************************************************************/
     if (timer === "Stopwatch" || timer === "Countdown") {
       return {
         type: timer, 
@@ -378,7 +381,6 @@ const AddWorkoutView = ()  => {
         checkTimeInput(e)
        }}/>
      </div> : null }
-
     </FormInputs>
     
     <BtnsWrapper>
@@ -386,19 +388,13 @@ const AddWorkoutView = ()  => {
       <AddStartBtn type="submit" onClick={(e) => btnClicked = "Start"}> Add and Start</AddStartBtn>
     </BtnsWrapper>
 
-
       <HomeBtn onClick={handleHome}> <HouseDoorFill/>
         <div>
           Home
           </div>
       </HomeBtn>
-     
       </Form>
       </Container>
-
-     
-     
-     
     </>
   );
 }

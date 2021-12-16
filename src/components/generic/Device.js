@@ -10,15 +10,12 @@ const sizeMapping = {
     height: 580,
 };
 
-
 const ScreenWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   color: #458FEB;
   position: relative;
-  
-  
 `;
 
 const Screen = styled.div`
@@ -30,8 +27,6 @@ const Screen = styled.div`
    padding-top: 30px;
    border: 12px solid black;
 `;
-
-
 
 const NavWrapper = styled.div`
     background: #323131;
@@ -48,11 +43,8 @@ const NavWrapper = styled.div`
     justify-content: space-around;
     align-items: center;
     align-content: center;
-    font-size: 17px;
-    
-        
+    font-size: 17px;   
 `;
-
 
 const RunTime = styled.div`
     color: ${({action, started }) => action.includes("Work") && started ? "#A09D9D" : "grey"};
@@ -62,9 +54,7 @@ const RestTime = styled.div`
     color: ${({action, started}) => action.includes("Rest") && started ? "#A09D9D" : "grey"};
 `;
 
-
 const BottomStats = styled.div`
-
     font-size: 15px;
     position: relative;
     top: -180px;
@@ -82,37 +72,24 @@ const BottomStats = styled.div`
         span {
             color: #9CCCC9D1;
             font-size: 18px;
-        }
-        
-    }
-
-    
+        }  
+    } 
 `;
 
 const TotalTime = styled.span`
     text-align: right;
     font-size: 20px !important;
-
 `;
 
 const ElapsedTime = styled(TotalTime)`
     text-align: right !important;
-   
-   
 `;
-
-
-
-
 
 
 const Device = ({...props}) => {
 
-   
-
     const { queue, currAction, currRound, running, currTimer, totalElapsed } = React.useContext(AppContext);
     const { totalTime } = React.useContext(InputContext)
-
 
     const workTime = queue[currTimer].workSeconds; 
     const timerType = queue[currTimer].type; 
@@ -121,22 +98,18 @@ const Device = ({...props}) => {
     
     return (
         <>
-
-        
-       
         <ScreenWrapper>
-           
             <Screen width={sizeMapping.width} height={sizeMapping.height}>
-           
                 {props.children}
                 <BottomStats>
-                    <div> <ElapsedTime>{formatTime(totalElapsed)}</ElapsedTime>
+                    <div> 
+                        <ElapsedTime>{formatTime(totalElapsed)}</ElapsedTime>
                         <div>Elapsed</div>
                     </div>
-                    <div> <TotalTime> {formatTime(totalTime)} </TotalTime>
+                    <div> 
+                        <TotalTime> {formatTime(totalTime)} </TotalTime>
                         <div>Total</div>
                     </div>
-                   
                 </BottomStats>
                 <NavWrapper>
                     <RunTime action={currAction} started={running}>
@@ -172,15 +145,11 @@ const Device = ({...props}) => {
                         </div>
                     </RestTime>
                     }
-                </NavWrapper>
-                
+                </NavWrapper>  
             </Screen>
         </ScreenWrapper>
-       
         </>
     );
-    }
-
-
+}
 
 export default Device;

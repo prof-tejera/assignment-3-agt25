@@ -62,14 +62,17 @@ class DocumentComponent extends React.Component {
         <Container>
           <RenderComponent>{this.props.component}</RenderComponent>
           <Documentation>
+            <tbody>
             <tr>
               <th>Prop</th>
               <th>Description</th>
               <th>Type</th>
               <th>Default value</th>
             </tr>
-            {this.props.propDocs.map((doc) => {
+            </tbody>
+            {this.props.propDocs.map((doc, index) => {
               return (
+                <tbody key={index}>
                 <tr>
                   <td><b>{doc.prop}</b></td>
                   <td>{doc.description}</td>
@@ -78,6 +81,8 @@ class DocumentComponent extends React.Component {
                     <code>{doc.defaultValue}</code>
                   </td>
                 </tr>
+                </tbody>
+                
               );
             })}
           </Documentation>
