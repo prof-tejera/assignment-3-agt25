@@ -84,7 +84,7 @@ As you have noticed this repository is empty. To begin this assignment you must 
 - DRY (do not repeat yourself). Try to make sure common code is shared and not copy/pasted
 - Console is free of warnings/errors
 - Documentation and prop-types are defined and accurate
-- Deploy your application
+- Deploy your application: [Assignment 3: React Workout App](https://main.d3qx7tqe2ida13.amplifyapp.com/)
 
 ### Deployment Instructions (GH actions)
 
