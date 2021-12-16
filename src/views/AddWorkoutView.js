@@ -318,83 +318,76 @@ const AddWorkoutView = ()  => {
 
   return (
       <> 
-      
-      <Container>
-      <Title>Add Your Workout</Title>
-      <Form onSubmit={(e) => saveTimer(e)}>
-
-        <FormHelper>Scheduled Timers: {queue.length}</FormHelper>
-    
-    <FormInputs>
-    {/****************************
-     * Select Timer options
-     ****************************/}
-    <div>
-      
-      <Label>Select Timer</Label> 
-      <CustomSelect name="timerType" value={timer} onChange={(e) => setTimerType(e.target.value)}>
-          <option default value="Stopwatch">Stopwatch</option>
-          <option value="Countdown">Countdown</option>
-          <option value="XY">XY</option>
-          <option value="Tabata">Tabata</option>
-      </CustomSelect>
-    </div>
-
-     {/****************************
-     * Work seconds
-     ****************************/}
-    <div>
-      <Label>Work Time (s)
-      <p>Max: 3600 (s)</p>
-      </Label>
-     
-      <CustomInput type="number" id="work" value={workSecs} min="1" required onChange={(e) => {
-        checkTimeInput(e) 
-       }
-      } 
-        />
-    </div>
-
-
-    {/****************************
-     * Rounds for XY and Tabata
-     ****************************/}
-    {timer === "XY" || timer === "Tabata" ? 
-     <div>
-      <Label>Rounds
-      <p>Max: 99</p>
-      </Label>
-      <CustomInput type="number" id="rounds" required onKeyUp={(e) => {
-        checkTimeInput(e)
-       }}/>
-     </div> : null }
-
-     {/****************************
-     * Rest seconds for Tabata
-     ****************************/}
-     {timer === "Tabata" ? 
-     <div>
-      <Label>Rest Time (s)
-      <p>Max: 3600 (s)</p>
-      </Label>
-      <CustomInput type="number" id="rest" required onKeyUp={(e) => {
-        checkTimeInput(e)
-       }}/>
-     </div> : null }
-    </FormInputs>
-    
-    <BtnsWrapper>
-      <AddBtn type="submit" onClick={(e) => btnClicked = "Add"}> Add to Queue</AddBtn>
-      <AddStartBtn type="submit" onClick={(e) => btnClicked = "Start"}> Add and Start</AddStartBtn>
-    </BtnsWrapper>
-
-      <HomeBtn onClick={handleHome}> <HouseDoorFill/>
-        <div>
-          Home
+        <Container>
+          <Title>Add Your Workout</Title>
+          <Form onSubmit={(e) => saveTimer(e)}>
+          <FormHelper>Scheduled Timers: {queue.length}</FormHelper>
+          <FormInputs>
+          {/****************************
+           * Select Timer options
+           ****************************/}
+          <div>
+            <Label>Select Timer</Label> 
+            <CustomSelect name="timerType" value={timer} onChange={(e) => setTimerType(e.target.value)}>
+                <option default value="Stopwatch">Stopwatch</option>
+                <option value="Countdown">Countdown</option>
+                <option value="XY">XY</option>
+                <option value="Tabata">Tabata</option>
+            </CustomSelect>
           </div>
-      </HomeBtn>
-      </Form>
-      </Container>
+
+          {/****************************
+           * Work seconds
+           ****************************/}
+          <div>
+              <Label>Work Time (s)
+              <p>Max: 3600 (s)</p>
+              </Label>
+            
+              <CustomInput type="number" id="work" value={workSecs} min="1" required onChange={(e) => {
+                checkTimeInput(e) 
+              }}/>
+          </div>
+
+          {/****************************
+           * Rounds for XY and Tabata
+           ****************************/}
+          {timer === "XY" || timer === "Tabata" ? 
+          <div>
+              <Label>Rounds
+              <p>Max: 99</p>
+              </Label>
+              <CustomInput type="number" id="rounds" required onKeyUp={(e) => {
+                checkTimeInput(e)
+              }}/>
+          </div> : null }
+
+          {/****************************
+           * Rest seconds for Tabata
+           ****************************/}
+          {timer === "Tabata" ? 
+          <div>
+            <Label>Rest Time (s)
+            <p>Max: 3600 (s)</p>
+            </Label>
+            <CustomInput type="number" id="rest" required onKeyUp={(e) => {
+              checkTimeInput(e)
+            }}/>
+          </div> : null }
+          </FormInputs>
+        
+          <BtnsWrapper>
+            <AddBtn type="submit" onClick={(e) => btnClicked = "Add"}> Add to Queue</AddBtn>
+            <AddStartBtn type="submit" onClick={(e) => btnClicked = "Start"}> Add and Start</AddStartBtn>
+          </BtnsWrapper>
+
+            <HomeBtn onClick={handleHome}> <HouseDoorFill/>
+              <div>
+                Home
+                </div>
+            </HomeBtn>
+          </Form>
+        </Container>
     </>
   );
 }
