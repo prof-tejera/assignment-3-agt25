@@ -1,5 +1,35 @@
 # Objective for Assignment 3
 
+# [Assignment 3: React Workout App](https://main.d3qx7tqe2ida13.amplifyapp.com/)
+
+## Queue Schema
+
+```
+
+const dummyTimers = [
+    {
+        type: 'XY',
+        rounds: 3,
+        workSeconds: 90, 
+        completed: true, 
+    }, {
+        type: 'Stopwatch',
+        workSeconds: 120, 
+        completed: false, 
+    }, {
+        type: 'Tabata',
+        workSeconds: 120,
+        rounds: 8,
+        restSeconds: 110,
+        completed: false, 
+    }, {
+        type: 'Countdown',
+        workSeconds: 180,
+        completed: false, 
+    }
+];
+```
+
 This is the 3rd and last assignment (A3) for E-39 Design Principles in React. Using our timers from Assignment 2 (A2), we will build a workout app that allows our users to assemble **multiple timers** into a workout queue. This workout queue will be executed in the order that the timers were added. Let's take a look at an example:
 
 ![Workout example 1](images/example_workout.png)
@@ -49,7 +79,7 @@ As you have noticed this repository is empty. To begin this assignment you must 
 - DRY (do not repeat yourself). Try to make sure common code is shared and not copy/pasted
 - Console is free of warnings/errors
 - Documentation and prop-types are defined and accurate
-- Deploy your application
+- Deploy your application: [Assignment 3: React Workout App](https://main.d3qx7tqe2ida13.amplifyapp.com/)
 
 ### Deployment Instructions (GH actions)
 
